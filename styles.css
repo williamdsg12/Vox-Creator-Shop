@@ -1,4 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&family=Mulish:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Master View Isolation Rules */
+#landing-page-view.hidden,
+#app-dashboard-view.hidden,
+#auth-view.hidden,
+#admin-portal-view.hidden {
+  display: none !important;
+}
+
+#app-dashboard-view[style*="display: none"] .sidebar {
+  display: none !important;
+}
 
 :root {
   --bg-dark: #070709;

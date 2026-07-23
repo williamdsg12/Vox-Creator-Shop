@@ -5,30 +5,45 @@ window.setActiveView = function(viewName, extraParam) {
   const dash = document.getElementById("app-dashboard-view");
   const admin = document.getElementById("admin-portal-view");
 
-  // Strictly hide all views
-  if (landing) landing.style.display = "none";
-  if (auth) auth.style.display = "none";
-  if (dash) dash.style.display = "none";
-  if (admin) admin.style.display = "none";
+  // Strictly hide all views via inline style AND class hidden
+  [landing, auth, dash, admin].forEach(view => {
+    if (view) {
+      view.style.display = "none";
+      view.classList.add("hidden");
+    }
+  });
 
   document.body.style.overflow = "auto";
 
   if (viewName === "landing") {
-    if (landing) landing.style.display = "block";
+    if (landing) {
+      landing.style.display = "block";
+      landing.classList.remove("hidden");
+    }
   } else if (viewName === "auth") {
-    if (landing) landing.style.display = "block";
+    if (landing) {
+      landing.style.display = "block";
+      landing.classList.remove("hidden");
+    }
     if (auth) {
       auth.style.display = "flex";
+      auth.classList.remove("hidden");
       auth.scrollTop = 0;
     }
     document.body.style.overflow = "hidden";
     if (window.toggleUserAuthTab) window.toggleUserAuthTab(extraParam || "login");
   } else if (viewName === "dashboard") {
-    if (dash) dash.style.display = "block";
+    if (dash) {
+      dash.style.display = "block";
+      dash.classList.remove("hidden");
+    }
     document.body.style.overflow = "hidden";
-    if (extraParam && window.switchTab) window.switchTab(extraParam);
+    if (window.switchTab) window.switchTab(extraParam || "dashboard");
   } else if (viewName === "admin") {
-    if (admin) admin.style.display = "block";
+    if (admin) {
+      admin.style.display = "block";
+      admin.classList.remove("hidden");
+    }
     if (window.renderAdminView) window.renderAdminView();
   }
 };
@@ -320,14 +335,16 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         showAuthPage('login');
       }
-    } else {
+    } else if (path === "/dashboard" || path === "/app") {
       const savedUser = localStorage.getItem("topcreator_user");
       if (savedUser) {
         state.user = JSON.parse(savedUser);
-        showAppDashboard();
+        showAppDashboard('dashboard');
       } else {
-        showLandingPage();
+        showAuthPage('login');
       }
+    } else {
+      showLandingPage();
     }
   }
 
