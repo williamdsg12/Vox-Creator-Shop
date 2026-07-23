@@ -23,6 +23,7 @@ window.toggleUserAuthTab = function(tab) {
   const regForm = document.getElementById("user-register-form");
   const tabLoginBtn = document.getElementById("user-tab-login");
   const tabRegBtn = document.getElementById("user-tab-register");
+  const authTitle = document.getElementById("user-auth-title");
   const errorEl = document.getElementById("auth-error");
 
   if (errorEl) errorEl.style.display = "none";
@@ -32,11 +33,19 @@ window.toggleUserAuthTab = function(tab) {
     if (regForm) regForm.style.display = "block";
     if (tabLoginBtn) tabLoginBtn.classList.remove("active");
     if (tabRegBtn) tabRegBtn.classList.add("active");
+    if (authTitle) authTitle.textContent = "Criar Conta no Vox Creator Shop";
+    if (window.location.pathname !== "/auth/register") {
+      window.history.replaceState({}, '', "/auth/register");
+    }
   } else {
     if (loginForm) loginForm.style.display = "block";
     if (regForm) regForm.style.display = "none";
     if (tabLoginBtn) tabLoginBtn.classList.add("active");
     if (tabRegBtn) tabRegBtn.classList.remove("active");
+    if (authTitle) authTitle.textContent = "Acessar o Vox Creator Shop";
+    if (window.location.pathname !== "/auth/login") {
+      window.history.replaceState({}, '', "/auth/login");
+    }
   }
 };
 
@@ -288,20 +297,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleRouting() {
-    const path = window.location.pathname;
-    const hash = window.location.hash;
+    const rawPath = window.location.pathname.toLowerCase();
+    const path = rawPath.endsWith("/") && rawPath.length > 1 ? rawPath.slice(0, -1) : rawPath;
+    const hash = window.location.hash.toLowerCase();
 
-    if (path === "/admin" || path === "/admin/" || hash === "#admin") {
+    if (path === "/admin" || hash === "#admin") {
       showAdminPortal();
-    } else if (path === "/auth/login" || path === "/auth/login/" || hash === "#login") {
-      showAuthPage('login');
-    } else if (path === "/auth/register" || path === "/auth/register/" || hash === "#register") {
+    } else if (path === "/auth/register" || hash === "#register") {
       showAuthPage('register');
-    } else if (path === "/products" || path === "/products/" || hash === "#products") {
+    } else if (path === "/auth/login" || path === "/auth" || hash === "#login") {
+      showAuthPage('login');
+    } else if (path === "/products" || hash === "#products") {
       const savedUser = localStorage.getItem("topcreator_user");
       if (savedUser) state.user = JSON.parse(savedUser);
       showAppDashboard('descobrir');
-    } else if (path === "/license/status" || path === "/license/status/" || hash === "#license") {
+    } else if (path === "/license/status" || path === "/license" || hash === "#license") {
       const savedUser = localStorage.getItem("topcreator_user");
       if (savedUser) state.user = JSON.parse(savedUser);
       showAppDashboard('dashboard');
