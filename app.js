@@ -1,3 +1,53 @@
+// --- GLOBAL WINDOW ROUTER FUNCTIONS ---
+window.showLandingPage = function() {
+  const landing = document.getElementById("landing-page-view");
+  const auth = document.getElementById("auth-view");
+  const dash = document.getElementById("app-dashboard-view");
+  const admin = document.getElementById("admin-portal-view");
+  if (landing) landing.style.display = "block";
+  if (auth) auth.style.display = "none";
+  if (dash) dash.style.display = "none";
+  if (admin) admin.style.display = "none";
+  document.body.style.overflow = "auto";
+};
+
+window.toggleUserAuthTab = function(tab) {
+  const loginForm = document.getElementById("user-login-form");
+  const regForm = document.getElementById("user-register-form");
+  const tabLoginBtn = document.getElementById("user-tab-login");
+  const tabRegBtn = document.getElementById("user-tab-register");
+  const errorEl = document.getElementById("auth-error");
+
+  if (errorEl) errorEl.style.display = "none";
+
+  if (tab === 'register') {
+    if (loginForm) loginForm.style.display = "none";
+    if (regForm) regForm.style.display = "block";
+    if (tabLoginBtn) tabLoginBtn.classList.remove("active");
+    if (tabRegBtn) tabRegBtn.classList.add("active");
+  } else {
+    if (loginForm) loginForm.style.display = "block";
+    if (regForm) regForm.style.display = "none";
+    if (tabLoginBtn) tabLoginBtn.classList.add("active");
+    if (tabRegBtn) tabRegBtn.classList.remove("active");
+  }
+};
+
+window.showAuthPage = function(tab = 'login') {
+  const landing = document.getElementById("landing-page-view");
+  const auth = document.getElementById("auth-view");
+  const dash = document.getElementById("app-dashboard-view");
+  const admin = document.getElementById("admin-portal-view");
+  if (landing) landing.style.display = "none";
+  if (auth) auth.style.display = "flex";
+  if (dash) dash.style.display = "none";
+  if (admin) admin.style.display = "none";
+  const errorEl = document.getElementById("auth-error");
+  if (errorEl) errorEl.style.display = "none";
+  document.body.style.overflow = "hidden";
+  window.toggleUserAuthTab(tab);
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   // Global State
   const state = {
