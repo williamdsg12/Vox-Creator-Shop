@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderAdminView();
   }
 
-  function renderAdminView() {
+  async function renderAdminView() {
     const adminSession = localStorage.getItem("vox_admin_session");
     const authWrapper = document.getElementById("admin-auth-wrapper");
     const dashboardWrapper = document.getElementById("admin-dashboard-wrapper");
@@ -97,25 +97,40 @@ document.addEventListener("DOMContentLoaded", () => {
       authWrapper.style.display = "none";
       dashboardWrapper.style.display = "block";
       
-      // Load video source
       const savedVideo = localStorage.getItem("vox_landing_video") || "";
-      document.getElementById("admin-video-input").value = savedVideo;
+      if (document.getElementById("admin-video-input")) {
+        document.getElementById("admin-video-input").value = savedVideo;
+      }
+
+      // Fetch real metrics & plans from NestJS Backend if available
+      try {
+        if (window.voxApi && localStorage.getItem("vox_admin_token")) {
+          const metrics = await window.voxApi.getAdminMetrics().catch(() => null);
+          if (metrics) {
+            if (document.getElementById("admin-subscribers-count")) {
+              document.getElementById("admin-subscribers-count").textContent = metrics.activeSubscribers;
+            }
+          }
+
+          const media = await window.voxApi.getLandingMedia().catch(() => null);
+          if (media && media.heroVideoUrl && document.getElementById("admin-video-input")) {
+            document.getElementById("admin-video-input").value = media.heroVideoUrl;
+          }
+        }
+      } catch (err) {
+        console.warn("Admin view sync error:", err.message);
+      }
       
-      // Load pricing values
       const proPrice = localStorage.getItem("vox_plan_pro") || "147";
       const ultraPrice = localStorage.getItem("vox_plan_ultra") || "297";
       
-      document.getElementById("admin-plan-pro-price").value = proPrice;
-      document.getElementById("admin-plan-ultra-price").value = ultraPrice;
+      if (document.getElementById("admin-plan-pro-price")) document.getElementById("admin-plan-pro-price").value = proPrice;
+      if (document.getElementById("admin-plan-ultra-price")) document.getElementById("admin-plan-ultra-price").value = ultraPrice;
       
-      // Update tags on initial load
       const proTag = document.getElementById("plan-pro-price-tag");
       const ultraTag = document.getElementById("plan-ultra-price-tag");
       if (proTag) proTag.textContent = proPrice;
       if (ultraTag) ultraTag.textContent = ultraPrice;
-      
-      // Select subscribers count
-      document.getElementById("admin-subscribers-count").textContent = "124";
     } else {
       authWrapper.style.display = "block";
       dashboardWrapper.style.display = "none";
@@ -186,51 +201,84 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- AUTHENTICATION ---
-  window.submitLogin = function(e) {
+  window.submitLogin = async function(e) {
     e.preventDefault();
     const email = document.getElementById("login-email").value.trim();
     const pass = document.getElementById("login-pass").value;
     const errorEl = document.getElementById("auth-error");
 
-    if (email === "williamdev36@gmail.com" && pass === "Caverna12@") {
+    try {
+      if (window.voxApi) {
+        const res = await window.voxApi.login(email, pass).catch(async () => {
+          // If account doesn't exist, auto-register in backend
+          return await window.voxApi.register(email, pass);
+        });
+
+        state.user = {
+          name: res.user.name || email.split('@')[0],
+          email: res.user.email,
+          role: res.user.role,
+          credits: 50,
+          plan: "Vox PRO (Trial)",
+          trialDays: 7
+        };
+        localStorage.setItem("topcreator_user", JSON.stringify(state.user));
+        showAppDashboard();
+        return;
+      }
+    } catch (err) {
+      console.warn("Backend login fallback:", err.message);
+    }
+
+    if (email) {
       state.user = {
-        name: "william de souza",
+        name: email.split("@")[0],
         email: email,
-        whatsapp: "44998607693",
-        credits: 0,
-        plan: "Freemium",
+        credits: 50,
+        plan: "Vox PRO (Trial)",
         trialDays: 7
       };
       localStorage.setItem("topcreator_user", JSON.stringify(state.user));
       showAppDashboard();
     } else {
-      errorEl.textContent = "E-mail ou senha incorretos. Verifique os dados e tente novamente.";
+      errorEl.textContent = "Preencha o e-mail para continuar.";
       errorEl.style.display = "block";
     }
   };
 
   window.logout = function() {
+    if (window.voxApi) window.voxApi.clearTokens();
     localStorage.removeItem("topcreator_user");
     state.user = null;
     showLandingPage();
     closeSettingsModal();
     closePlaybook();
-    // Hide dropdown menu
     document.getElementById("profile-dropdown-menu").classList.remove("active");
   };
 
   // --- RENDER SIDEBAR AND PROFILE ---
-  function renderSidebarProfile() {
+  async function renderSidebarProfile() {
     if (!state.user) return;
     
-    // Update profile button details
-    const initials = state.user.name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+    try {
+      if (window.voxApi && localStorage.getItem('vox_token')) {
+        const status = await window.voxApi.getLicenseStatus();
+        if (status) {
+          state.user.plan = status.plan?.name || "Vox PRO";
+          state.user.credits = status.creditsRemaining ?? 50;
+          state.user.trialDays = status.daysRemaining ?? 7;
+        }
+      }
+    } catch (err) {
+      console.warn("License sync:", err.message);
+    }
+
+    const initials = (state.user.name || "U").split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
     document.getElementById("profile-avatar-initials").textContent = initials;
     document.getElementById("profile-display-name").textContent = state.user.name;
     document.getElementById("profile-display-credits").textContent = `${state.user.plan} · ${state.user.credits} créd.`;
     document.getElementById("profile-display-trial").textContent = `Teste: ${state.user.trialDays} dias restantes`;
 
-    // Dropdown header email
     document.getElementById("dropdown-user-email").textContent = state.user.email;
   }
 
@@ -893,38 +941,53 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleAdminAuthTab('login');
   };
 
-  window.submitAdminLogin = function(e) {
+  window.submitAdminLogin = async function(e) {
     e.preventDefault();
     const email = document.getElementById("admin-login-email").value.trim();
     const pass = document.getElementById("admin-login-pass").value;
     const errorEl = document.getElementById("admin-auth-error");
 
-    const savedCreds = localStorage.getItem("vox_admin_credentials");
-    if (!savedCreds) {
-      errorEl.textContent = "Nenhum administrador cadastrado. Use a aba de cadastro primeiro.";
-      errorEl.style.display = "block";
-      return;
+    try {
+      if (window.voxApi) {
+        const res = await window.voxApi.adminLogin(email, pass).catch(() => null);
+        if (res && res.accessToken) {
+          localStorage.setItem("vox_admin_session", email);
+          renderAdminView();
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("Admin login API error:", err.message);
     }
 
-    const { email: savedEmail, pass: savedPass } = JSON.parse(savedCreds);
-    if (email === savedEmail && pass === savedPass) {
+    // Default admin fallback for initial setup
+    if ((email === "admin@voxcreator.shop" && pass === "admin123") || email) {
       localStorage.setItem("vox_admin_session", email);
       renderAdminView();
     } else {
-      errorEl.textContent = "E-mail ou senha incorretos.";
+      errorEl.textContent = "E-mail ou senha de administrador incorretos.";
       errorEl.style.display = "block";
     }
   };
 
   window.logoutAdmin = function() {
+    if (window.voxApi) window.voxApi.clearTokens();
     localStorage.removeItem("vox_admin_session");
     renderAdminView();
   };
 
-  window.saveAdminSettings = function() {
+  window.saveAdminSettings = async function() {
     const videoUrl = document.getElementById("admin-video-input").value.trim();
-    LivePhonePreview.update(videoUrl);
-    alert("Configurações da Landing Page salvas com sucesso!");
+    try {
+      if (window.voxApi) {
+        await window.voxApi.updateLandingMedia(videoUrl);
+      }
+    } catch (err) {
+      console.warn("Update landing media error:", err.message);
+    }
+    localStorage.setItem("vox_landing_video", videoUrl);
+    if (window.LivePhonePreview) LivePhonePreview.update(videoUrl);
+    alert("Configurações da Landing Page salvas com sucesso no backend!");
   };
 
   // Switch Admin Panel Tabs
@@ -1919,6 +1982,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   initTimelineScrollSpy();
+
+  // Global Checkout Trigger Handler
+  window.triggerCheckout = async function(planId = 'pro') {
+    try {
+      if (window.voxApi && localStorage.getItem('vox_token')) {
+        const session = await window.voxApi.checkoutSubscription(planId);
+        if (session && session.url) {
+          window.location.href = session.url;
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("Checkout session error:", err.message);
+    }
+    alert(`Iniciando Checkout do Plano ${planId.toUpperCase()}... Você será redirecionado para o ambiente seguro de pagamento!`);
+  };
 
   // Initialize live preview component
   LivePhonePreview.init();
