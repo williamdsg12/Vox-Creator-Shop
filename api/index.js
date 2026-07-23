@@ -4,7 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
-const { AppModule } = require('../backend/dist/app.module.js');
+const { AppModule } = require('../dist/app.module.js');
 
 let app;
 

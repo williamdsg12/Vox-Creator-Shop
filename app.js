@@ -309,12 +309,20 @@ document.addEventListener("DOMContentLoaded", () => {
       showAuthPage('login');
     } else if (path === "/products" || hash === "#products") {
       const savedUser = localStorage.getItem("topcreator_user");
-      if (savedUser) state.user = JSON.parse(savedUser);
-      showAppDashboard('descobrir');
+      if (savedUser) {
+        state.user = JSON.parse(savedUser);
+        showAppDashboard('descobrir');
+      } else {
+        showAuthPage('login');
+      }
     } else if (path === "/license/status" || path === "/license" || hash === "#license") {
       const savedUser = localStorage.getItem("topcreator_user");
-      if (savedUser) state.user = JSON.parse(savedUser);
-      showAppDashboard('dashboard');
+      if (savedUser) {
+        state.user = JSON.parse(savedUser);
+        showAppDashboard('dashboard');
+      } else {
+        showAuthPage('login');
+      }
     } else {
       const savedUser = localStorage.getItem("topcreator_user");
       if (savedUser) {
