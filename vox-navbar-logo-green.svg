@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800;900&amp;display=swap');
+      .vox-title-g { font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif; font-weight: 900; font-size: 50px; fill: #C6FF00; letter-spacing: -0.02em; }
+      .vox-sub-g { font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif; font-weight: 700; font-size: 14px; fill: #C6FF00; opacity: 0.9; letter-spacing: 0.22em; text-transform: uppercase; }
+    </style>
+  </defs>
+
+  <g transform="translate(10, 10)">
+    <g id="logo-icon-g">
+      <rect x="0" y="5" width="90" height="90" rx="22" fill="none" stroke="#C6FF00" stroke-width="4"/>
+      <g transform="translate(45, 50)">
+        <rect x="-28" y="-12" width="8" height="24" rx="4" fill="#C6FF00"/>
+        <rect x="-14" y="-24" width="8" height="48" rx="4" fill="#C6FF00"/>
+        <rect x="0" y="-34" width="8" height="68" rx="4" fill="#C6FF00"/>
+        <rect x="14" y="-24" width="8" height="48" rx="4" fill="#C6FF00"/>
+        <rect x="28" y="-12" width="8" height="24" rx="4" fill="#C6FF00"/>
+      </g>
+    </g>
+
+    <g transform="translate(112, 10)">
+      <text x="0" y="48" class="vox-title-g">VOX</text>
+      <text x="2" y="74" class="vox-sub-g">CREATOR SHOP</text>
+    </g>
+  </g>
+</svg>

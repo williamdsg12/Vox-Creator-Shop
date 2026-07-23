@@ -1,0 +1,14 @@
+{
+  "name": "vox-creator-shop",
+  "version": "1.0.0",
+  "description": "Vox Creator Shop - O Copiloto de Conversão para Live Commerce no TikTok",
+  "main": "app.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

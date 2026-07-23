@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="iconBg512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#182200"/>
+      <stop offset="100%" stop-color="#090D00"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="120" fill="url(#iconBg512)" stroke="#C6FF00" stroke-width="12" stroke-opacity="0.9" />
+
+  <g transform="translate(256, 256)" filter="url(#neonGlow)">
+    <rect x="-140" y="-60" width="36" height="120" rx="18" fill="#C6FF00"/>
+    <rect x="-70" y="-120" width="36" height="240" rx="18" fill="#C6FF00"/>
+    <rect x="0" y="-170" width="36" height="340" rx="18" fill="#FF6A00"/>
+    <rect x="70" y="-120" width="36" height="240" rx="18" fill="#C6FF00"/>
+    <rect x="140" y="-60" width="36" height="120" rx="18" fill="#C6FF00"/>
+  </g>
+</svg>
