@@ -6,17 +6,18 @@ export class SettingsService {
   constructor(private supabaseService: SupabaseService) {}
 
   async getPlans() {
-    const db = this.supabaseService.getMemoryDb();
-    return db.plans;
+    const db = this.supabaseService.getClient();
+    const { data } = await db.from('plans').select('*').order('price', { ascending: true });
+    return data || [];
   }
 
   async updatePlans(plansData: any[]) {
-    const db = this.supabaseService.getMemoryDb();
+    const db = this.supabaseService.getClient();
     if (!Array.isArray(plansData)) {
       throw new BadRequestException('Formato de dados de planos inválido.');
     }
 
-    db.plans = plansData.map((p) => ({
+    const rows = plansData.map((p) => ({
       id: p.id,
       name: p.name || (p.id === 'pro' ? 'Vox PRO' : 'Vox ULTRA'),
       price: Number(p.price),
@@ -25,43 +26,50 @@ export class SettingsService {
       is_active: p.is_active !== false,
     }));
 
-    db.admin_logs.push({
-      id: `log-${Date.now()}`,
+    const { data, error } = await db.from('plans').upsert(rows).select();
+    if (error) {
+      throw new BadRequestException('Não foi possível atualizar os planos.');
+    }
+
+    await db.from('admin_logs').insert({
       action: 'UPDATE_PLANS',
       target: 'settings/plans',
-      details: { updatedCount: db.plans.length },
-      created_at: new Date().toISOString(),
+      details: { updatedCount: rows.length },
     });
 
-    return db.plans;
+    return data;
   }
 
   async getLandingMedia() {
-    const db = this.supabaseService.getMemoryDb();
+    const db = this.supabaseService.getClient();
+    const { data } = await db
+      .from('landing_settings')
+      .select('value')
+      .eq('key', 'hero_video_url')
+      .maybeSingle();
+
     return {
-      heroVideoUrl: db.landing_settings.hero_video_url,
+      heroVideoUrl: data?.value ?? null,
     };
   }
 
   async updateLandingMedia(videoUrl: string) {
-    const db = this.supabaseService.getMemoryDb();
+    const db = this.supabaseService.getClient();
     if (!videoUrl) {
       throw new BadRequestException('A URL ou arquivo de vídeo é obrigatório.');
     }
 
-    db.landing_settings.hero_video_url = videoUrl;
+    await db.from('landing_settings').upsert({ key: 'hero_video_url', value: videoUrl });
 
-    db.admin_logs.push({
-      id: `log-${Date.now()}`,
+    await db.from('admin_logs').insert({
       action: 'UPDATE_LANDING_MEDIA',
       target: 'settings/landing-media',
       details: { videoUrl },
-      created_at: new Date().toISOString(),
     });
 
     return {
       message: 'Mídia da landing page atualizada com sucesso.',
-      heroVideoUrl: db.landing_settings.hero_video_url,
+      heroVideoUrl: videoUrl,
     };
   }
 }

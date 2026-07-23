@@ -1,51 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
-export class SupabaseService {
-  private memoryDb = {
-    users: [],
-    licenses: [],
-    subscriptions: [],
-    plans: [
-      {
-        id: 'pro',
-        name: 'Vox PRO',
-        price: 147.00,
-        interval: 'monthly',
-        features: [
-          'Copiloto IA Ilimitado',
-          'Teleprompter Inteligente',
-          'Radar de Produtos em Alta',
-          'Solicitador de Amostras Grátis',
-          'Suporte VIP no WhatsApp'
-        ],
-        is_active: true
-      },
-      {
-        id: 'ultra',
-        name: 'Vox ULTRA',
-        price: 297.00,
-        interval: 'monthly',
-        features: [
-          'Tudo do plano PRO',
-          'Múltiplas Contas TikTok Shop',
-          'Extensão OS Chrome Enterprise',
-          'Relatórios de ROAS/CPA Avançados',
-          'Consultoria Quinzenal em Grupo'
-        ],
-        is_active: true
-      }
-    ],
-    landing_settings: {
-      hero_video_url: 'https://assets.mixkit.co/videos/preview/mixkit-vertical-shot-of-a-woman-showing-clothing-41566-large.mp4'
-    },
-    admin_logs: []
-  };
+export class SupabaseService implements OnModuleInit {
+  private client: SupabaseClient;
 
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) {
+    const url = this.configService.get<string>('SUPABASE_URL');
+    const key = this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY');
 
-  getMemoryDb() {
-    return this.memoryDb;
+    if (!url || !key) {
+      throw new Error(
+        'SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY precisam estar configurados nas variáveis de ambiente do backend.',
+      );
+    }
+
+    this.client = createClient(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+  }
+
+  onModuleInit() {
+    // Client pronto para uso pelos services via getClient().
+  }
+
+  getClient(): SupabaseClient {
+    return this.client;
   }
 }
