@@ -1,4 +1,11 @@
-// --- GLOBAL WINDOW ROUTER FUNCTIONS ---
+// --- GLOBAL WINDOW ROUTER & NAVIGATION FUNCTIONS (NO HASH) ---
+window.navigateTo = function(path) {
+  if (window.location.pathname !== path) {
+    window.history.pushState({}, '', path);
+  }
+  if (window.handleRouting) window.handleRouting();
+};
+
 window.showLandingPage = function() {
   const landing = document.getElementById("landing-page-view");
   const auth = document.getElementById("auth-view");
@@ -46,7 +53,7 @@ window.showAdminPortal = function() {
   if (window.renderAdminView) window.renderAdminView();
 };
 
-window.showAppDashboard = function() {
+window.showAppDashboard = function(tabId) {
   const landing = document.getElementById("landing-page-view");
   const auth = document.getElementById("auth-view");
   const dash = document.getElementById("app-dashboard-view");
@@ -56,6 +63,7 @@ window.showAppDashboard = function() {
   if (dash) dash.style.display = "block";
   if (admin) admin.style.display = "none";
   document.body.style.overflow = "hidden";
+  if (tabId && window.switchTab) window.switchTab(tabId);
 };
 
 window.showAuthPage = function(tab = 'login') {
@@ -280,11 +288,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleRouting() {
+    const path = window.location.pathname;
     const hash = window.location.hash;
-    if (hash === "#admin") {
+
+    if (path === "/admin" || path === "/admin/" || hash === "#admin") {
       showAdminPortal();
-    } else if (hash === "#login") {
-      showAuthPage();
+    } else if (path === "/auth/login" || path === "/auth/login/" || hash === "#login") {
+      showAuthPage('login');
+    } else if (path === "/auth/register" || path === "/auth/register/" || hash === "#register") {
+      showAuthPage('register');
+    } else if (path === "/products" || path === "/products/" || hash === "#products") {
+      const savedUser = localStorage.getItem("topcreator_user");
+      if (savedUser) state.user = JSON.parse(savedUser);
+      showAppDashboard('descobrir');
+    } else if (path === "/license/status" || path === "/license/status/" || hash === "#license") {
+      const savedUser = localStorage.getItem("topcreator_user");
+      if (savedUser) state.user = JSON.parse(savedUser);
+      showAppDashboard('dashboard');
     } else {
       const savedUser = localStorage.getItem("topcreator_user");
       if (savedUser) {
@@ -296,7 +316,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Bind route change listener
+  window.handleRouting = handleRouting;
+
+  // Bind route change listeners
+  window.addEventListener("popstate", handleRouting);
   window.addEventListener("hashchange", handleRouting);
   // Trigger initial routing
   setTimeout(handleRouting, 50);

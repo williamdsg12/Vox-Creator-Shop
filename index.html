@@ -53,9 +53,9 @@
       </nav>
       <div style="display: flex; gap: 14px; align-items: center;">
         <button class="btn-secondary" style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.03); height: 40px; padding: 0 18px; border-radius: 99px; font-weight: 600; color: #fff;"
-          onclick="showAuthPage('login')">Entrar</button>
+          onclick="navigateTo('/auth/login')">Entrar</button>
         <button class="btn-hero-primary" style="height: 42px; padding: 0 22px; font-size: 14px;"
-          onclick="showAuthPage('register')">Começar Grátis</button>
+          onclick="navigateTo('/auth/register')">Começar Grátis</button>
       </div>
     </header>
 
@@ -805,10 +805,10 @@
   <!-- ==================== VIEW 2: AUTH VIEW (LOGIN / REGISTER) ==================== -->
   <div id="auth-view" style="display: none;" class="auth-container">
     <div class="auth-card animate-fade-in" style="position: relative; max-width: 440px; width: 100%; margin: auto;">
-      <button onclick="showLandingPage(); window.location.hash='';" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px;" title="Voltar para a Landing">✕</button>
+      <button onclick="navigateTo('/')" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px;" title="Voltar para a Landing">✕</button>
       
       <div class="auth-header" style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px;">
-        <div class="landing-logo-container" style="cursor: pointer;" onclick="showLandingPage(); window.location.hash='';">
+        <div class="landing-logo-container" style="cursor: pointer;" onclick="navigateTo('/')">
           <img src="vox-logo-full-dark.svg" alt="Vox Creator Shop" class="landing-logo-img" style="height: 52px;">
         </div>
         <h2 id="user-auth-title" style="font-size: 20px; font-weight: 700; margin: 0;">Acessar o Vox Creator Shop</h2>
@@ -2217,7 +2217,7 @@
           <h2 style="font-family: var(--font-tech); font-weight: 700; color: #fff; margin: 0; font-size: 20px;">Vox Admin Control</h2>
         </div>
         <div style="display: flex; gap: 16px; align-items: center;">
-          <button class="btn-secondary" style="height: 36px; padding: 0 16px; font-size: 13px; border-radius: 8px;" onclick="showLandingPage(); window.location.hash='';">Voltar à Landing</button>
+          <button class="btn-secondary" style="height: 36px; padding: 0 16px; font-size: 13px; border-radius: 8px;" onclick="navigateTo('/')">Voltar à Landing</button>
           <button class="btn-secondary dropdown-item-danger" style="height: 36px; padding: 0 16px; font-size: 13px; border-radius: 8px; border: 1px solid rgba(249,58,55,0.15);" onclick="logoutAdmin()">Sair</button>
         </div>
       </div>
