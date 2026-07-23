@@ -1709,7 +1709,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (breakoutList) {
       breakoutList.innerHTML = "";
-      const breakouts = [...window.mockData.products].sort((a, b) => b.salesToday - a.salesYesterday).slice(0, 3);
+      const breakouts = [...(window.mockData?.products || [])].sort((a, b) => b.salesToday - a.salesYesterday).slice(0, 3);
       breakouts.forEach(p => {
         const item = document.createElement("div");
         item.className = "radar-item";
@@ -1763,11 +1763,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("ia-recommend-result");
     if (!val || !container) return;
 
-    // Find products matching category
-    let match = window.mockData.products.find(p => p.category.toLowerCase().includes(val) || p.title.toLowerCase().includes(val));
+    const prods = window.mockData?.products || [];
+    let match = prods.find(p => p.category.toLowerCase().includes(val) || p.title.toLowerCase().includes(val));
     if (!match) {
-      // fallback to cinta
-      match = window.mockData.products[0];
+      match = prods[0] || { id: '1', title: 'Produto TikTok Shop', image: '', category: 'Geral', profitPotential: 50 };
     }
 
     container.style.display = "block";
@@ -1812,7 +1811,7 @@ document.addEventListener("DOMContentLoaded", () => {
       listEl.style.display = "flex";
 
       // Filter and sort products
-      let filtered = [...window.mockData.products];
+      let filtered = [...(window.mockData?.products || [])];
 
       // 1. Text Search query
       const searchInput = document.getElementById("discover-search-input");
@@ -2096,7 +2095,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.exportData = function(format) {
     // Generate simple content
     let content = "ID,Titulo,Categoria,GMV,Crescimento,Criadores,Comissao,ScoreIA\n";
-    window.mockData.products.forEach(p => {
+    (window.mockData?.products || []).forEach(p => {
       content += `${p.id},"${p.title.replace(/"/g, '""')}","${p.category}",${p.gmv.replace(/\D/g, "")},${p.weeklyGrowth},${p.creatorsCount},${p.commissionPercent}%,${calculateScoreIA(p)}\n`;
     });
 
@@ -2111,7 +2110,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Detail Modal functions
   window.openProductDetail = function(productId) {
-    const p = window.mockData.products.find(item => item.id === productId);
+    const p = (window.mockData?.products || []).find(item => item.id === productId);
     if (!p) return;
 
     state.viewingProductId = productId;
