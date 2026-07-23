@@ -724,12 +724,20 @@ body {
 
 /* Auth / Login View */
 .auth-container {
-  min-h: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background-color: var(--bg-dark);
+  background-color: rgba(10, 11, 14, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow-y: auto;
 }
 
 .auth-card {
