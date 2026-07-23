@@ -1066,162 +1066,235 @@
           </div>
         </header>
 
-        <!-- SCREEN 0: VISÃO GERAL (DASHBOARD GERAL) -->
+        <!-- ==================== VIEW 0: DASHBOARD SAAS ENTERPRISE ==================== -->
         <div id="dashboard-screen" class="dashboard-screen active animate-fade-in">
-          <div class="screen-header flex justify-between items-center" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-            <div>
-              <h1 id="dashboard-greeting-title" style="font-size: 26px;">Visão Geral de Vendas</h1>
-              <p style="color: var(--text-secondary); margin-top: 4px;">Métricas e análises em tempo real para TikTok Shop Brasil.</p>
+          
+          <!-- BLOCO 1: SAAS HEADER BANNER -->
+          <div class="saas-header-banner">
+            <div class="saas-header-title-box">
+              <h1>
+                <span id="saas-greeting-name">Bom dia, William</span> 👋
+              </h1>
+              <div class="saas-header-meta">
+                <span id="saas-live-date">23 de Julho, 2026</span>
+                <span>•</span>
+                <span id="saas-live-clock" style="font-family: monospace; font-weight: 700; color: #C8FF00;">18:38:59</span>
+                <span>•</span>
+                <span>🛍️ TikTok Shop Brasil</span>
+              </div>
             </div>
-            <!-- WS Live Status Badge -->
-            <div class="ws-connection-tag flex items-center gap-2" style="background-color: rgba(198, 255, 0, 0.1); border: 1px solid rgba(198, 255, 0, 0.2); padding: 8px 16px; border-radius: 99px; display: flex; align-items: center; gap: 8px;">
-              <span class="pulsing-dot green" style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent-lime); display: inline-block;"></span>
-              <span style="font-size: 11px; font-weight: bold; color: var(--accent-lime); letter-spacing: 0.5px;">SSE & WS: CONECTADO</span>
+
+            <div class="saas-header-actions">
+              <div class="saas-plan-tag">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: #C8FF00; box-shadow: 0 0 8px #C8FF00;"></span>
+                <span id="saas-user-plan-badge">Vox PRO (Trial) · 7 dias</span>
+              </div>
+              <button class="saas-btn-upgrade" onclick="triggerCheckout('pro')">
+                <span>⚡ Fazer Upgrade</span>
+              </button>
+              <button onclick="openNotificationsDrawer()" title="Notificações do Sistema" style="position: relative; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 42px; height: 42px; border-radius: 10px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span id="notif-badge-counter" style="position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; background: #FF6A00; border-radius: 50%; border: 2px solid #050507;"></span>
+              </button>
             </div>
           </div>
 
-          <!-- KPI Cards Grid -->
-          <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 32px;">
-            <div class="kpi-card" style="background-color: #0f0f13; border: 1px solid var(--border-color); padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
-              <span class="kpi-label" style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px;">Faturamento Analisado</span>
-              <div class="kpi-value" id="kpi-faturamento" style="font-family: var(--font-tech); font-size: 24px; font-weight: 700; color: #fff; margin: 12px 0 6px;">R$ 2.483.210,40</div>
-              <span class="kpi-sub success" style="color: var(--accent-lime); font-size: 11px; font-weight: 700;">▲ +18.7% <span class="muted" style="color: var(--text-muted); font-weight: 400;">este mês</span></span>
-            </div>
-            <div class="kpi-card" style="background-color: #0f0f13; border: 1px solid var(--border-color); padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
-              <span class="kpi-label" style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px;">Lives Monitoradas</span>
-              <div class="kpi-value" style="font-family: var(--font-tech); font-size: 24px; font-weight: 700; color: #fff; margin: 12px 0 6px; display: flex; align-items: center; gap: 8px;">
-                <span id="kpi-lives-count">187</span>
-                <span class="pulsing-dot green" style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent-lime); display: inline-block;"></span>
+          <!-- BLOCO 2: 12 KPI METRIC CARDS GRID -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Métricas Globais de Vendas (TikTok Shop)</h3>
+            <span style="font-size: 11px; color: var(--text-muted);">Sincronização em tempo real SSE</span>
+          </div>
+          <div id="saas-kpis-container" class="saas-kpi-grid">
+            <!-- 12 KPI Cards Hydrated Dynamically via JS -->
+          </div>
+
+          <!-- BLOCO 3: CENTRAL DE AÇÕES RÁPIDAS (ACTION CARDS) -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Central de Ações Rápidas em 1-Clique</h3>
+          </div>
+          <div id="saas-actions-container" class="saas-actions-grid">
+            <!-- Action Cards Hydrated Dynamically via JS -->
+          </div>
+
+          <!-- BLOCO 4 & 5: COPILOTO IA FEED & CENTRAL DE LIVES AO VIVO -->
+          <div class="saas-feed-grid">
+            <!-- AI Copilot Feed (ChatGPT Style) -->
+            <div class="saas-ai-feed-box">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 14px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="background: #C8FF00; color: #000; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 6px;">🟢 IA COPILOTO ONLINE</span>
+                  <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin: 0;">Feed de Recomendações e Insights</h3>
+                </div>
+                <span style="font-size: 11px; color: var(--text-muted);">Atualizado a cada 10s</span>
               </div>
-              <span class="kpi-sub success" style="color: var(--accent-lime); font-size: 11px; font-weight: 700;">▲ +45 ativas <span class="muted" style="color: var(--text-muted); font-weight: 400;">agora</span></span>
+              <div id="saas-ai-feed-list">
+                <!-- AI Feed items loaded dynamically -->
+              </div>
             </div>
-            <div class="kpi-card" style="background-color: #0f0f13; border: 1px solid var(--border-color); padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
-              <span class="kpi-label" style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px;">Ticket Médio</span>
-              <div class="kpi-value" id="kpi-ticket" style="font-family: var(--font-tech); font-size: 24px; font-weight: 700; color: #fff; margin: 12px 0 6px;">R$ 114,80</div>
-              <span class="kpi-sub" style="color: var(--accent-orange); font-size: 11px; font-weight: 700;">★ Top Faturado</span>
-            </div>
-            <div class="kpi-card" style="background-color: #0f0f13; border: 1px solid var(--border-color); padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
-              <span class="kpi-label" style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px;">Taxa de Conversão Média</span>
-              <div class="kpi-value" id="kpi-conversao" style="font-family: var(--font-tech); font-size: 24px; font-weight: 700; color: #fff; margin: 12px 0 6px;">4.2%</div>
-              <span class="kpi-sub success" style="color: var(--accent-lime); font-size: 11px; font-weight: 700;">▲ +0.8% <span class="muted" style="color: var(--text-muted); font-weight: 400;">vs ontem</span></span>
+
+            <!-- Live Broadcast Realtime Control Widget -->
+            <div style="background: #0f0f13; border: 1px solid rgba(255, 106, 0, 0.3); border-radius: 20px; padding: 24px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span class="pulsing-dot green" style="width: 8px; height: 8px; border-radius: 50%; background: #FF6A00; box-shadow: 0 0 10px #FF6A00; display: inline-block;"></span>
+                    <span style="font-size: 11px; font-weight: 800; color: #FF6A00; letter-spacing: 0.5px;">🔴 TRANSMISSÃO AO VIVO</span>
+                  </div>
+                  <span style="font-size: 11px; color: var(--text-muted); font-family: monospace;">01:24:12</span>
+                </div>
+
+                <div style="margin-bottom: 18px;">
+                  <span style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Espectadores Simultâneos</span>
+                  <div style="font-family: var(--font-tech); font-size: 28px; font-weight: 800; color: #fff; margin-top: 4px; display: flex; align-items: center; gap: 10px;">
+                    <span id="saas-live-viewers-count">1.840</span>
+                    <span style="font-size: 11px; background: rgba(200, 255, 0, 0.15); color: #C8FF00; padding: 2px 8px; border-radius: 4px;">Pico 2.450</span>
+                  </div>
+                </div>
+
+                <div style="grid-template-columns: 1fr 1fr; display: grid; gap: 12px; margin-bottom: 18px;">
+                  <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px;">
+                    <span style="font-size: 10px; color: var(--text-muted); font-weight: 700;">PEDIDOS NA LIVE</span>
+                    <strong id="saas-live-orders-count" style="display: block; font-family: var(--font-tech); font-size: 16px; color: #fff; margin-top: 2px;">284 un</strong>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px;">
+                    <span style="font-size: 10px; color: var(--text-muted); font-weight: 700;">FATURAMENTO LIVE</span>
+                    <strong id="saas-live-revenue-count" style="display: block; font-family: var(--font-tech); font-size: 16px; color: #C8FF00; margin-top: 2px;">R$ 29.480,00</strong>
+                  </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 12px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                  <img src="https://s.500fd.com/tt_product/b5e487422d45496eaf883b32fafbe07b~tplv-aphluv4xwc-crop-webp:1500:1500.webp" style="width: 42px; height: 42px; border-radius: 8px; object-fit: cover;" />
+                  <div>
+                    <span style="font-size: 10px; color: #C8FF00; font-weight: 800;">PRODUTO FIXADO NA SACOLA</span>
+                    <h5 style="font-size: 12px; color: #fff; margin: 2px 0 0 0;">Base Líquida WePink Matte 45ml</h5>
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn-primary" style="width: 100%; height: 44px; background: linear-gradient(135deg, #FF6A00, #C8FF00); color: #000; font-weight: 800; border: none; border-radius: 10px; font-size: 13px;" onclick="switchTab('lives-studio')">
+                🎤 Entrar na Central de Lives & Teleprompter
+              </button>
             </div>
           </div>
 
-          <!-- Charts Row -->
-          <div class="dashboard-charts-row" style="display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap;">
-            <!-- Dynamic Sales SVG Chart -->
-            <div class="dashboard-chart-card" style="flex: 2; min-width: 320px; background-color: #0f0f13; border: 1px solid var(--border-color); padding: 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);">
-              <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 16px;">
-                <h3 style="font-family: var(--font-tech); font-size: 16px; font-weight: 700; color: #fff; margin: 0;">Vendas nas últimas 24 Horas</h3>
-                <span class="muted" style="font-size: 11px; color: var(--text-muted);">Atualizado em tempo real</span>
+          <!-- BLOCO 6: ANALYTICS & 4 CHARTS GRID -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Analytics Enterprise & Gráficos Interativos</h3>
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px;">
+            <!-- Chart 1: Sales 24h -->
+            <div style="background: #0f0f13; border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 14px; margin-bottom: 16px;">
+                <h4 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; margin: 0;">Curva de Vendas nas últimas 24 Horas (R$)</h4>
+                <span style="font-size: 11px; color: #C8FF00; font-weight: 700;">+24.8% hoje</span>
               </div>
-              <div class="chart-canvas-wrapper" style="position: relative; height: 200px; margin-top: 20px;">
-                <svg viewBox="0 0 600 200" style="width: 100%; height: 100%; overflow: visible;" id="dashboard-sales-chart-svg">
+              <div style="position: relative; height: 180px;">
+                <svg viewBox="0 0 600 180" style="width: 100%; height: 100%; overflow: visible;" id="dashboard-sales-chart-svg">
                   <defs>
                     <linearGradient id="main-chart-glow" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="var(--accent-orange)" stop-opacity="0.25"/>
+                      <stop offset="0%" stop-color="var(--accent-orange)" stop-opacity="0.3"/>
                       <stop offset="100%" stop-color="var(--accent-orange)" stop-opacity="0"/>
                     </linearGradient>
                   </defs>
-                  <!-- SVG Grid lines -->
-                  <line x1="0" y1="50" x2="600" y2="50" stroke="rgba(255,255,255,0.05)" />
-                  <line x1="0" y1="100" x2="600" y2="100" stroke="rgba(255,255,255,0.05)" />
-                  <line x1="0" y1="150" x2="600" y2="150" stroke="rgba(255,255,255,0.05)" />
-                  
-                  <path id="sales-chart-fill" d="M 0 200 L 0 170 L 100 150 L 200 165 L 300 110 L 400 120 L 500 70 L 600 50 L 600 200 Z" fill="url(#main-chart-glow)" />
-                  <path id="sales-chart-path" d="M 0 170 L 100 150 L 200 165 L 300 110 L 400 120 L 500 70 L 600 50" fill="none" stroke="var(--accent-orange)" stroke-width="4" stroke-linecap="round" />
-                  
-                  <!-- Dots -->
-                  <circle cx="0" cy="170" r="4" fill="#070709" stroke="var(--accent-orange)" stroke-width="2" />
-                  <circle cx="100" cy="150" r="4" fill="#070709" stroke="var(--accent-orange)" stroke-width="2" />
-                  <circle cx="200" cy="165" r="4" fill="#070709" stroke="var(--accent-orange)" stroke-width="2" />
-                  <circle id="live-point-circle" cx="600" cy="50" r="6" fill="var(--accent-orange)" stroke="#fff" stroke-width="2" />
+                  <line x1="0" y1="45" x2="600" y2="45" stroke="rgba(255,255,255,0.05)" />
+                  <line x1="0" y1="90" x2="600" y2="90" stroke="rgba(255,255,255,0.05)" />
+                  <line x1="0" y1="135" x2="600" y2="135" stroke="rgba(255,255,255,0.05)" />
+                  <path id="sales-chart-fill" d="M 0 180 L 0 150 L 100 130 L 200 145 L 300 90 L 400 100 L 500 50 L 600 30 L 600 180 Z" fill="url(#main-chart-glow)" />
+                  <path id="sales-chart-path" d="M 0 150 L 100 130 L 200 145 L 300 90 L 400 100 L 500 50 L 600 30" fill="none" stroke="var(--accent-orange)" stroke-width="4" stroke-linecap="round" />
+                  <circle id="live-point-circle" cx="600" cy="30" r="6" fill="var(--accent-orange)" stroke="#fff" stroke-width="2" />
                 </svg>
               </div>
             </div>
 
-            <!-- Peak Hours & saturation card -->
-            <div class="dashboard-chart-card" style="flex: 1; min-width: 260px; background-color: #0f0f13; border: 1px solid var(--border-color); padding: 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);">
-              <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 16px;">
-                <h3 style="font-family: var(--font-tech); font-size: 16px; font-weight: 700; color: #fff; margin: 0;">Horários de Pico (Live Viewers)</h3>
+            <!-- Chart 2: Distribution Donut Chart -->
+            <div style="background: #0f0f13; border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column; justify-content: space-between;">
+              <div style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 14px; margin-bottom: 14px;">
+                <h4 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; margin: 0;">Vendas por Categoria</h4>
               </div>
-              <div class="peak-hours-list" style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
-                <div class="peak-hour-row" style="display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
-                  <span class="hour" style="width: 90px; color: var(--text-secondary); font-weight: 500;">19:00 - 22:00</span>
-                  <div class="progress-track" style="flex-grow: 1; height: 6px; background-color: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; margin: 0 12px;">
-                    <div class="progress-bar" style="height: 100%; width: 95%; background-color: var(--accent-orange); border-radius: 99px;"></div>
-                  </div>
-                  <span class="val" style="width: 32px; text-align: right; font-weight: 700;">95%</span>
-                </div>
-                <div class="peak-hour-row" style="display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
-                  <span class="hour" style="width: 90px; color: var(--text-secondary); font-weight: 500;">12:00 - 14:00</span>
-                  <div class="progress-track" style="flex-grow: 1; height: 6px; background-color: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; margin: 0 12px;">
-                    <div class="progress-bar" style="height: 100%; width: 70%; background-color: var(--accent-orange); border-radius: 99px;"></div>
-                  </div>
-                  <span class="val" style="width: 32px; text-align: right; font-weight: 700;">70%</span>
-                </div>
-                <div class="peak-hour-row" style="display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
-                  <span class="hour" style="width: 90px; color: var(--text-secondary); font-weight: 500;">16:00 - 18:00</span>
-                  <div class="progress-track" style="flex-grow: 1; height: 6px; background-color: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; margin: 0 12px;">
-                    <div class="progress-bar" style="height: 100%; width: 55%; background-color: var(--text-muted); border-radius: 99px;"></div>
-                  </div>
-                  <span class="val" style="width: 32px; text-align: right; font-weight: 700;">55%</span>
-                </div>
-                <div class="peak-hour-row" style="display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
-                  <span class="hour" style="width: 90px; color: var(--text-secondary); font-weight: 500;">08:00 - 10:00</span>
-                  <div class="progress-track" style="flex-grow: 1; height: 6px; background-color: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; margin: 0 12px;">
-                    <div class="progress-bar" style="height: 100%; width: 30%; background-color: var(--text-muted); border-radius: 99px;"></div>
-                  </div>
-                  <span class="val" style="width: 32px; text-align: right; font-weight: 700;">30%</span>
-                </div>
+              <div style="display: flex; align-items: center; justify-content: center; position: relative; height: 140px;">
+                <svg width="140" height="140" viewBox="0 0 42 42">
+                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="5" />
+                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="#C8FF00" stroke-width="5" stroke-dasharray="45 55" stroke-dashoffset="25" />
+                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="#FF6A00" stroke-width="5" stroke-dasharray="30 70" stroke-dashoffset="80" />
+                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="#00E5FF" stroke-width="5" stroke-dasharray="25 75" stroke-dashoffset="50" />
+                  <text x="21" y="23" text-anchor="middle" font-size="7" font-weight="bold" fill="#fff">100%</text>
+                </svg>
+              </div>
+              <div style="display: flex; justify-content: space-around; font-size: 11px; color: var(--text-muted); margin-top: 10px;">
+                <span>🟢 Roupas 45%</span>
+                <span>🟠 Beleza 30%</span>
+                <span>🔵 Tech 25%</span>
               </div>
             </div>
           </div>
 
-          <!-- Rankings and lists Row -->
-          <div class="dashboard-tables-row" style="display: flex; gap: 24px; flex-wrap: wrap;">
-            <!-- Real-time Ranking Card -->
-            <div class="dashboard-table-card" style="flex: 2; min-width: 320px; background-color: #0f0f13; border: 1px solid var(--border-color); padding: 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);">
-              <div class="table-card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 16px; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
-                <div class="tabs-control" style="display: flex; gap: 8px; background-color: #17171d; padding: 4px; border-radius: 8px;">
-                  <button id="rank-tab-diario" class="tab-btn active" onclick="switchRankingTab('diario')" style="background: none; border: none; padding: 6px 12px; font-size: 12px; font-weight: bold; color: var(--accent-orange); cursor: pointer; border-radius: 6px;">Ranking Diário</button>
-                  <button id="rank-tab-semanal" class="tab-btn" onclick="switchRankingTab('semanal')" style="background: none; border: none; padding: 6px 12px; font-size: 12px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-radius: 6px;">Ranking Semanal</button>
-                </div>
-                <span class="muted" style="font-size: 11px; color: var(--text-muted);">Calculado via velocidade & GMV</span>
+          <!-- BLOCO 7 & 8: TABELA DE PRODUTOS RANKING GMV -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Produtos em Destaque & Ranking de Vendas</h3>
+            <div style="display: flex; gap: 8px;">
+              <button id="rank-tab-diario" class="btn-secondary active" style="height: 32px; font-size: 11px; padding: 0 12px; border-radius: 6px;" onclick="switchRankingTab('diario')">Ranking Diário</button>
+              <button id="rank-tab-semanal" class="btn-secondary" style="height: 32px; font-size: 11px; padding: 0 12px; border-radius: 6px;" onclick="switchRankingTab('semanal')">Ranking Semanal</button>
+            </div>
+          </div>
+          <div style="background: #0f0f13; border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); margin-bottom: 32px;">
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+                <thead>
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.08); color: var(--text-muted);">
+                    <th style="padding: 12px;">Produto</th>
+                    <th style="padding: 12px;">Faturamento GMV</th>
+                    <th style="padding: 12px;">Crescimento</th>
+                    <th style="padding: 12px;">Criadores Ativos</th>
+                    <th style="padding: 12px;">Score IA</th>
+                    <th style="padding: 12px; text-align: right;">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="ranking-table-body">
+                  <!-- Product rows hydrated dynamically via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- BLOCO 9 & 10: METAS ANIMADAS & CALENDÁRIO SEMANAL -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+            <!-- Goals Progress Panel -->
+            <div class="saas-goals-box">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px;">
+                <h4 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; margin: 0;">Progresso das Metas do Mês</h4>
+                <span style="font-size: 11px; color: #C8FF00; font-weight: 800;">85.4% Concluído</span>
               </div>
-              
-              <div class="table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                <table class="premium-table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                  <thead>
-                    <tr style="text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08);">
-                      <th style="padding: 12px; color: var(--text-muted); font-weight: 600;">Produto</th>
-                      <th style="padding: 12px; color: var(--text-muted); font-weight: 600;">Faturamento</th>
-                      <th style="padding: 12px; color: var(--text-muted); font-weight: 600;">Crescimento</th>
-                      <th style="padding: 12px; color: var(--text-muted); font-weight: 600;">Criadores</th>
-                      <th style="padding: 12px; color: var(--text-muted); font-weight: 600;">Score IA</th>
-                      <th style="padding: 12px; color: var(--text-muted); font-weight: 600; text-align: right;">Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody id="ranking-table-body">
-                    <!-- Loaded dynamically -->
-                  </tbody>
-                </table>
+              <div id="saas-goals-container">
+                <!-- Goals hydrated dynamically -->
               </div>
             </div>
 
-            <!-- Side Widgets: Virais / Queda / Criadores -->
-            <div class="dashboard-table-card" style="flex: 1; min-width: 260px; background-color: #0f0f13; border: 1px solid var(--border-color); padding: 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);">
-              <h3 class="card-title" style="font-family: var(--font-tech); font-size: 16px; font-weight: 700; color: #fff; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">Dinâmica de Mercado</h3>
-              <div style="display: flex; flex-direction: column; gap: 24px;">
-                <div class="widget-list-section">
-                  <div class="widget-list-title" style="font-size: 11px; font-weight: bold; color: var(--accent-lime); margin-bottom: 12px; text-transform: uppercase;">PRODUTOS EM ALTA 🔥</div>
-                  <div id="alta-products-widget" class="widget-items-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
-                </div>
-                <div class="widget-list-section">
-                  <div class="widget-list-title" style="font-size: 11px; font-weight: bold; color: var(--accent-red); margin-bottom: 12px; text-transform: uppercase;">PRODUTOS EM QUEDA ❄️</div>
-                  <div id="queda-products-widget" class="widget-items-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
-                </div>
+            <!-- Weekly Calendar Panel -->
+            <div class="saas-goals-box">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px;">
+                <h4 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; margin: 0;">Agenda de Lives e Lançamentos</h4>
+                <button class="btn-secondary" style="height: 28px; font-size: 11px; padding: 0 10px; border-radius: 6px;" onclick="switchTab('lives-studio')">Ver Agenda</button>
               </div>
+              <div id="saas-calendar-container" style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- Weekly calendar events hydrated dynamically -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- BLOCO 11: NOTIFICATIONS DRAWER OVERLAY -->
+        <div id="notifications-drawer-overlay" class="notifications-drawer-overlay">
+          <div class="notifications-drawer-container">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 16px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 20px;">🔔</span>
+                <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin: 0;">Notificações em Tempo Real</h3>
+              </div>
+              <button onclick="closeNotificationsDrawer()" style="background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer;">✕</button>
+            </div>
+            <div id="notifications-list-container" style="display: flex; flex-direction: column; gap: 14px;">
+              <!-- Notifications items hydrated dynamically -->
             </div>
           </div>
         </div>
@@ -1400,7 +1473,7 @@
             </section>
 
             <!-- Search form -->
-            <form class="radar-form" onsubmit="e => e.preventDefault()">
+            <form class="radar-form" onsubmit="event.preventDefault()">
               <div class="search-group">
                 <div class="search-input-wrapper" style="flex-grow: 1; width: auto;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -1676,7 +1749,7 @@
         </div>
 
         <!-- SCREEN: CENTRAL DE LIVES & COPILOTO IA -->
-        <div id="lives-studio-screen" class="dashboard-screen animate-fade-in" style="display: none;">
+        <div id="lives-studio-screen" class="dashboard-screen animate-fade-in">
           <div class="screen-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
             <div>
               <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
@@ -1788,7 +1861,7 @@
         </div>
 
         <!-- SCREEN: PRODUTOS GRATUITOS (AMOSTRAS) -->
-        <div id="samples-screen" class="dashboard-screen animate-fade-in" style="display: none;">
+        <div id="samples-screen" class="dashboard-screen animate-fade-in">
           <div class="screen-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
             <div>
               <h1 style="font-size: 26px;">🎁 Solicitador de Amostras Grátis (Produtos Gratuitos)</h1>
@@ -1863,7 +1936,7 @@
         </div>
 
         <!-- SCREEN: IA ESTRATÉGICA & FEED -->
-        <div id="ai-strategic-screen" class="dashboard-screen animate-fade-in" style="display: none;">
+        <div id="ai-strategic-screen" class="dashboard-screen animate-fade-in">
           <div class="screen-header" style="margin-bottom: 24px;">
             <h1 style="font-size: 26px;">🧠 IA Estratégica & Feed Diagnóstico</h1>
             <p style="color: var(--text-secondary); margin-top: 4px;">A inteligência artificial interpreta os dados da sua conta e fornece respostas acionáveis: O que aconteceu? Por que aconteceu? O que fazer agora?</p>
@@ -1899,7 +1972,7 @@
         </div>
 
         <!-- SCREEN: EXTENSÃO CHROME OS -->
-        <div id="extension-screen" class="dashboard-screen animate-fade-in" style="display: none;">
+        <div id="extension-screen" class="dashboard-screen animate-fade-in">
           <div class="screen-header" style="margin-bottom: 24px;">
             <h1 style="font-size: 26px;">🧩 Extensão Chrome OS (Automação de Sacola)</h1>
             <p style="color: var(--text-secondary); margin-top: 4px;">Gerenciamento e sincronização automática da extensão do navegador para o TikTok Seller Center.</p>
@@ -1931,7 +2004,7 @@
         </div>
 
         <!-- SCREEN: ANALYTICS AVANÇADO -->
-        <div id="analytics-screen" class="dashboard-screen animate-fade-in" style="display: none;">
+        <div id="analytics-screen" class="dashboard-screen animate-fade-in">
           <div class="screen-header" style="margin-bottom: 24px;">
             <h1 style="font-size: 26px;">📊 Analytics Avançado Enterprise</h1>
             <p style="color: var(--text-secondary); margin-top: 4px;">Relatórios profundos de ROAS, CPA, CPM, CTR e lucratividade por produto e live.</p>

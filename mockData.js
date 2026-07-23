@@ -648,6 +648,79 @@ const mockData = {
       trendStatus: "alta",
       scoreBreakdown: { demanda: 9.5, crescimento: 9.8, margem: 6.2, saturacao: 5.0, escalabilidade: 9.6 }
     }
+  ],
+  kpis: [
+    { id: "receita_hoje", title: "Receita Hoje", value: "R$ 28.450,00", change: "+24.8%", positive: true, sparkline: [12, 18, 15, 24, 28, 35, 42, 48], icon: "💰", subtitle: "vs. ontem R$ 22.790" },
+    { id: "receita_semana", title: "Receita Semana", value: "R$ 142.890,00", change: "+18.2%", positive: true, sparkline: [80, 95, 110, 105, 125, 138, 142], icon: "📈", subtitle: "vs. sem. anterior" },
+    { id: "receita_mes", title: "Receita Mês", value: "R$ 512.400,00", change: "+31.5%", positive: true, sparkline: [300, 340, 380, 420, 470, 512], icon: "🏆", subtitle: "Meta: R$ 600K" },
+    { id: "pedidos_totais", title: "Pedidos Totais", value: "1.842 un", change: "+14.2%", positive: true, sparkline: [120, 140, 135, 160, 175, 184], icon: "📦", subtitle: "Ticket Médio R$ 114,80" },
+    { id: "produtos_ativos", title: "Produtos no Radar", value: "34 itens", change: "+4 novos", positive: true, sparkline: [20, 24, 25, 28, 30, 34], icon: "🔥", subtitle: "12 na sua Vitrine" },
+    { id: "taxa_conversao", title: "Taxa de Conversão", value: "5.8%", change: "+1.2%", positive: true, sparkline: [3.8, 4.2, 4.5, 5.0, 5.4, 5.8], icon: "🎯", subtitle: "Média mercado: 3.2%" },
+    { id: "tempo_live", title: "Tempo de Live Mês", value: "42h 15m", change: "+8h esta sem.", positive: true, sparkline: [15, 20, 28, 34, 38, 42], icon: "🎤", subtitle: "18 transmissões" },
+    { id: "ctr_sacola", title: "CTR da Sacola", value: "9.4%", change: "+2.1%", positive: true, sparkline: [6.0, 6.8, 7.5, 8.2, 8.9, 9.4], icon: "🛍️", subtitle: "Clique no produto" },
+    { id: "roas_medio", title: "ROAS Médio", value: "4.8x", change: "+0.6x", positive: true, sparkline: [3.2, 3.8, 4.0, 4.2, 4.5, 4.8], icon: "📊", subtitle: "Retorno de anúncios" },
+    { id: "ticket_medio", title: "Ticket Médio", value: "R$ 114,80", change: "+5.4%", positive: true, sparkline: [98, 102, 105, 108, 112, 114], icon: "💳", subtitle: "Top: WePink Matte" },
+    { id: "produtos_alta", title: "Produtos em Alta", value: "18 virais", change: "+6 hoje", positive: true, sparkline: [8, 10, 12, 14, 16, 18], icon: "🚀", subtitle: "Kalodata Sync" },
+    { id: "lives_realizadas", title: "Lives Realizadas", value: "42 lives", change: "+12 este mês", positive: true, sparkline: [20, 25, 30, 35, 39, 42], icon: "⚡", subtitle: "Meta: 50 lives" }
+  ],
+  quickActions: [
+    { id: "action_script", title: "Novo Script IA", desc: "Gerar roteiro com ganchos em 15s", icon: "✨", color: "#C8FF00", tab: "lives" },
+    { id: "action_live", title: "Iniciar Nova Live", desc: "Abrir copiloto e teleprompter", icon: "🎤", color: "#FF6A00", tab: "lives-studio" },
+    { id: "action_radar", title: "Radar de Produtos", desc: "Buscar produtos mais vendidos no TikTok", icon: "🔍", color: "#00E5FF", tab: "descobrir" },
+    { id: "action_sync", title: "Sincronizar TikTok", desc: "Conectar sacola e dados reais", icon: "🔗", color: "#C8FF00", modal: "tiktok-sync" },
+    { id: "action_samples", title: "Solicitar Amostra", desc: "Enviar mensagem IA ao vendedor", icon: "🎁", color: "#FF6A00", tab: "samples" },
+    { id: "action_ai", title: "Diagnóstico da IA", desc: "Análise estratégica da sua conta", icon: "🧠", color: "#A855F7", tab: "ai-strategic" },
+    { id: "action_extension", title: "Extensão Chrome OS", desc: "Automação da sacola ao vivo", icon: "🧩", color: "#00E5FF", tab: "extension" },
+    { id: "action_analytics", title: "Analytics Avançado", desc: "ROAS, CPA e ROI detalhados", icon: "📊", color: "#C8FF00", tab: "analytics" },
+    { id: "action_teleprompter", title: "Abrir Teleprompter", desc: "Painel de transmissão ao vivo", icon: "📜", color: "#FF6A00", tab: "lives" }
+  ],
+  aiFeed: [
+    {
+      id: "feed-1",
+      type: "opportunity",
+      title: "🔥 Oportunidade Urgente de Retenção",
+      time: "Há 2 minutos",
+      content: "Detectamos um pico de 2.450 pessoas na live no horário das 19h30. Recomendamos acionar o cupom de Frete Grátis e repetir o gancho de urgência nos próximos 60s.",
+      badge: "ALTA CONVERSÃO",
+      actionText: "Acionar Frete Grátis",
+      actionTab: "lives-studio"
+    },
+    {
+      id: "feed-2",
+      type: "insight",
+      title: "📈 Produto com Score 9.8 em Explosão",
+      time: "Há 12 minutos",
+      content: "O item 'Ventilador de Teto Lâmpada' teve um crescimento de +75.9% nas últimas 24h com GMV acumulado de R$ 19.220. Adicione-o à sua vitrine.",
+      badge: "VIRAL TIKTOK",
+      actionText: "+ Adicionar à Vitrine",
+      productId: "ventilador_teto"
+    },
+    {
+      id: "feed-3",
+      type: "alert",
+      title: "💡 Dica de Roteiro de Live",
+      time: "Há 35 minutos",
+      content: "Sua audiência costuma hesitar sobre a cobertura da Base WePink Matte. Mostre o teste de aplicação ao vivo no dorso da mão antes de chamar para a sacola.",
+      badge: "QUEBRA DE OBJEÇÃO",
+      actionText: "Ver Roteiro Recomendado",
+      actionTab: "lives"
+    }
+  ],
+  goals: [
+    { id: "goal_vendas", title: "Meta de Faturamento Mensal", current: 512400, target: 600000, unit: "R$", color: "#C8FF00" },
+    { id: "goal_lives", title: "Meta de Horas em Transmissão", current: 42, target: 50, unit: "horas", color: "#FF6A00" },
+    { id: "goal_pedidos", title: "Meta de Pedidos no Mês", current: 1842, target: 2000, unit: "pedidos", color: "#00E5FF" },
+    { id: "goal_conversao", title: "Meta de Taxa de Conversão", current: 5.8, target: 7.0, unit: "%", color: "#A855F7" }
+  ],
+  weeklyCalendar: [
+    { id: "cal-1", day: "Hoje", time: "19:00", title: "Live Especial WePink Glow", product: "Base WePink Matte", status: "agendado" },
+    { id: "cal-2", day: "Amanhã", time: "18:30", title: "Maratona Áudio & Games", product: "Fone Lenovo GM2 Pro", status: "agendado" },
+    { id: "cal-3", day: "Sexta", time: "20:00", title: "Lançamento Skincare Noturno", product: "Sérum Retinol 0,3%", status: "confirmado" }
+  ],
+  notifications: [
+    { id: "notif-1", title: "Novo Pedido de R$ 99,90", desc: "Comissão de R$ 19,98 creditada via Base WePink Matte", time: "Há 1 min", icon: "💰" },
+    { id: "notif-2", title: "Amostra Grátis Aprovada!", desc: "A marca WePink Official aprovou seu envio de amostra", time: "Há 15 min", icon: "🎁" },
+    { id: "notif-3", title: "Conexão SSE TikTok Ativa", desc: "Motor de dados em tempo real sincronizado com a API", time: "Há 1h", icon: "⚡" }
   ]
 };
 

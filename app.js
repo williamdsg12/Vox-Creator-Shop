@@ -356,40 +356,95 @@ document.addEventListener("DOMContentLoaded", () => {
   // Trigger initial routing
   setTimeout(handleRouting, 50);
 
-  function switchTab(tabId) {
-    state.currentTab = tabId;
-    
-    // Update active tab buttons in sidebar
+  // --- NEW UNIFIED MULTI-TAB ROUTER AND SCREEN RENDERERS ---
+  function renderLives() {
+    renderHistory();
+  }
+
+  function renderVideos() {
+    // Roteiros de vídeo inicializado
+  }
+
+  function renderFixar() {
+    // Fixar produto na live inicializado
+  }
+
+  function renderAnalytics() {
+    // Analytics avançado inicializado
+  }
+
+  function renderLivesStudio() {
+    // Central de lives & Copiloto IA inicializado
+  }
+
+  function renderSamples() {
+    // Produtos gratuitos e amostras inicializado
+  }
+
+  function renderAiStrategic() {
+    // IA Estratégica & Feed inicializado
+  }
+
+  function renderExtension() {
+    // Extensão Chrome OS inicializada
+  }
+
+  function switchTab(tabName) {
+    state.currentTab = tabName;
+
+    const map = {
+      dashboard: "dashboard-screen",
+      analytics: "analytics-screen",
+      "lives-studio": "lives-studio-screen",
+      inteligencia: "inteligencia-screen",
+      lives: "lives-screen",
+      videos: "videos-screen",
+      fixar: "fixar-screen",
+      descobrir: "descobrir-screen",
+      samples: "samples-screen",
+      "ai-strategic": "ai-strategic-screen",
+      extension: "extension-screen"
+    };
+
+    // Reset inline styles and active status on all dashboard screens
+    document.querySelectorAll(".dashboard-screen").forEach(screen => {
+      screen.classList.remove("active");
+      screen.style.display = "none";
+    });
+
+    const targetId = map[tabName] || "dashboard-screen";
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      targetEl.classList.add("active");
+      targetEl.style.display = "flex";
+    }
+
+    // Update active state on sidebar navigation menu items
     document.querySelectorAll(".menu-item").forEach(btn => {
       btn.classList.remove("active");
-      if (btn.dataset.tab === tabId) {
+      const dataTab = btn.dataset.tab || btn.getAttribute("data-tab");
+      if (dataTab === tabName) {
         btn.classList.add("active");
       }
     });
 
-    // Toggle screen sections
-    document.querySelectorAll(".dashboard-screen").forEach(screen => {
-      screen.classList.remove("active");
-    });
-    
-    const targetScreen = document.getElementById(`${tabId}-screen`);
-    if (targetScreen) {
-      targetScreen.classList.add("active");
-    }
+    // Trigger tab-specific render engine
+    if (tabName === "dashboard") renderDashboard();
+    else if (tabName === "analytics") renderAnalytics();
+    else if (tabName === "lives-studio") renderLivesStudio();
+    else if (tabName === "inteligencia") renderIntelligence();
+    else if (tabName === "lives") renderLives();
+    else if (tabName === "videos") renderVideos();
+    else if (tabName === "fixar") renderFixar();
+    else if (tabName === "descobrir") renderDiscover();
+    else if (tabName === "samples") renderSamples();
+    else if (tabName === "ai-strategic") renderAiStrategic();
+    else if (tabName === "extension") renderExtension();
 
-    // Close mobile menu sidebar if open
-    const sidebar = document.getElementById("sidebar-aside");
-    if (sidebar) sidebar.classList.remove("active");
-
-    // Route rendering
-    if (tabId === "dashboard") {
-      renderDashboard();
-    } else if (tabId === "inteligencia") {
-      renderIntelligence();
-    } else if (tabId === "descobrir") {
-      renderDiscover();
-    }
+    if (window.closeMobileSidebar) window.closeMobileSidebar();
   }
+
+  window.switchTab = switchTab;
 
   // --- AUTHENTICATION ---
   window.submitLogin = async function(e) {
@@ -1284,6 +1339,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- PREMIUM SAAS ANALYTICS & SAAS INTELLIGENCE ENGINE ---
 
+  // Live Clock & Notifications Drawer Helpers
+  let dashboardClockInterval = null;
+  function startDashboardClock() {
+    if (dashboardClockInterval) clearInterval(dashboardClockInterval);
+    dashboardClockInterval = setInterval(() => {
+      const clockEl = document.getElementById("saas-live-clock");
+      if (clockEl) {
+        const now = new Date();
+        clockEl.textContent = now.toLocaleTimeString("pt-BR");
+      }
+    }, 1000);
+  }
+
+  window.openNotificationsDrawer = function() {
+    const overlay = document.getElementById("notifications-drawer-overlay");
+    if (overlay) overlay.style.display = "flex";
+  };
+
+  window.closeNotificationsDrawer = function() {
+    const overlay = document.getElementById("notifications-drawer-overlay");
+    if (overlay) overlay.style.display = "none";
+  };
+
   // Mathematical scoring helpers
   function calculateScoreIA(p) {
     if (!p.scoreBreakdown) return 0;
@@ -1299,88 +1377,198 @@ document.addEventListener("DOMContentLoaded", () => {
     return (rateFactor + creatorsFactor + salesFactor).toFixed(0);
   }
 
-  // visao geral / dashboard renderer
+  // --- VISÃO GERAL / SAAS DASHBOARD ENTERPRISE RENDERER ---
   window.renderDashboard = function() {
-    const tableBody = document.getElementById("ranking-table-body");
-    if (!tableBody) return;
+    startDashboardClock();
 
-    // Set KPI counters
-    const totalGmv = window.mockData.products.reduce((acc, p) => acc + parseInt(p.gmv.replace(/\D/g, "")), 0) * 10;
-    document.getElementById("kpi-faturamento").textContent = `R$ ${totalGmv.toLocaleString("pt-BR")},40`;
-    
-    // Sort ranking list
-    let rankingList = [...window.mockData.products];
-    if (state.rankingPeriod === "diario") {
-      rankingList.sort((a, b) => b.salesToday - a.salesToday);
-      document.getElementById("rank-tab-diario").classList.add("active");
-      document.getElementById("rank-tab-semanal").classList.remove("active");
-    } else {
-      rankingList.sort((a, b) => b.sales - a.sales);
-      document.getElementById("rank-tab-diario").classList.remove("active");
-      document.getElementById("rank-tab-semanal").classList.add("active");
+    // 1. Hydrate 12 KPI Metric Cards Grid
+    const kpisContainer = document.getElementById("saas-kpis-container");
+    if (kpisContainer && window.mockData.kpis) {
+      kpisContainer.innerHTML = "";
+      window.mockData.kpis.forEach(k => {
+        const card = document.createElement("div");
+        card.className = "saas-kpi-card";
+        
+        // Generate sparkline SVG path
+        const maxVal = Math.max(...k.sparkline);
+        const minVal = Math.min(...k.sparkline);
+        const range = maxVal - minVal || 1;
+        const pts = k.sparkline.map((v, i) => {
+          const x = (i / (k.sparkline.length - 1)) * 70 + 5;
+          const y = 24 - ((v - minVal) / range) * 18;
+          return `${x},${y}`;
+        }).join(" ");
+
+        card.innerHTML = `
+          <div class="saas-kpi-header">
+            <span class="saas-kpi-label">${k.title}</span>
+            <div class="saas-kpi-icon">${k.icon}</div>
+          </div>
+          <div class="saas-kpi-body">
+            <div class="saas-kpi-value">${k.value}</div>
+          </div>
+          <div class="saas-kpi-footer">
+            <span class="saas-kpi-badge ${k.positive ? "up" : "down"}">${k.change}</span>
+            <svg class="saas-sparkline-svg" viewBox="0 0 80 28">
+              <polyline fill="none" stroke="${k.positive ? "#C8FF00" : "#FF4D4D"}" stroke-width="2.5" stroke-linecap="round" points="${pts}" />
+            </svg>
+          </div>
+        `;
+        kpisContainer.appendChild(card);
+      });
     }
 
-    tableBody.innerHTML = "";
-    rankingList.forEach((p, idx) => {
-      const isShowcase = state.showcase.includes(p.id);
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td style="padding: 12px; display: flex; align-items: center; gap: 10px;">
-          <span style="font-weight: 700; color: var(--accent-orange); width: 18px;">#${idx + 1}</span>
-          <img src="${p.image}" style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;" alt="">
-          <span style="font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;" title="${p.title}">${p.title}</span>
-        </td>
-        <td style="padding: 12px;">R$ ${(p.sales * 89.9).toLocaleString("pt-BR", {maximumFractionDigits: 0})}</td>
-        <td style="padding: 12px; color: ${p.weeklyGrowth >= 0 ? "var(--accent-lime)" : "var(--accent-red)"}; font-weight: 700;">
-          ${p.weeklyGrowth >= 0 ? "▲ +" : "▼ "}${p.weeklyGrowth}%
-        </td>
-        <td style="padding: 12px;">${p.creatorsCount} criadores</td>
-        <td style="padding: 12px;"><b style="color: var(--accent-orange); font-size: 14px;">${calculateScoreIA(p)}</b></td>
-        <td style="padding: 12px; text-align: right;">
-          <button class="btn-secondary" style="height: 28px; font-size: 11px; padding: 0 10px; border-radius: 6px; margin-right: 6px; border-color: rgba(255,255,255,0.15);" onclick="openProductDetail('${p.id}')">Detalhes</button>
-          <button class="btn-primary" style="height: 28px; font-size: 11px; padding: 0 10px; border-radius: 6px; background-color: ${isShowcase ? "var(--accent-lime)" : "var(--accent-orange)"}; color: var(--bg-dark);" onclick="toggleShowcaseProduct('${p.id}')">
-            ${isShowcase ? "✓ Vitrine" : "+ Vitrine"}
+    // 2. Hydrate Action Cards Grid
+    const actionsContainer = document.getElementById("saas-actions-container");
+    if (actionsContainer && window.mockData.quickActions) {
+      actionsContainer.innerHTML = "";
+      window.mockData.quickActions.forEach(a => {
+        const card = document.createElement("div");
+        card.className = "saas-action-card";
+        card.onclick = () => {
+          if (a.tab) switchTab(a.tab);
+          else if (a.modal === "tiktok-sync" && window.openTikTokApiSyncModal) window.openTikTokApiSyncModal();
+        };
+        card.innerHTML = `
+          <div class="saas-action-icon" style="background: ${a.color}15; color: ${a.color}; border: 1px solid ${a.color}40;">${a.icon}</div>
+          <div class="saas-action-info">
+            <h4>${a.title}</h4>
+            <p>${a.desc}</p>
+          </div>
+        `;
+        actionsContainer.appendChild(card);
+      });
+    }
+
+    // 3. Hydrate AI Copilot Feed List
+    const feedContainer = document.getElementById("saas-ai-feed-list");
+    if (feedContainer && window.mockData.aiFeed) {
+      feedContainer.innerHTML = "";
+      window.mockData.aiFeed.forEach(f => {
+        const item = document.createElement("div");
+        item.className = "saas-feed-item";
+        item.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 11px; font-weight: 800; color: #C8FF00; background: rgba(200,255,0,0.1); padding: 3px 8px; border-radius: 4px;">${f.badge}</span>
+            <span style="font-size: 11px; color: var(--text-muted);">${f.time}</span>
+          </div>
+          <h4 style="font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 6px 0;">${f.title}</h4>
+          <p style="font-size: 12px; color: var(--text-secondary); margin: 0 0 12px 0; line-height: 1.5;">${f.content}</p>
+          <button class="btn-secondary" style="height: 30px; font-size: 11px; padding: 0 12px; border-radius: 6px; border-color: rgba(200,255,0,0.4); color: #C8FF00;" onclick="${f.actionTab ? `switchTab('${f.actionTab}')` : `openProductDetail('${f.productId}')`}">
+            ${f.actionText} →
           </button>
-        </td>
-      `;
-      tableBody.appendChild(row);
-    });
-
-    // Populate widgets
-    const altaContainer = document.getElementById("alta-products-widget");
-    const quedaContainer = document.getElementById("queda-products-widget");
-
-    if (altaContainer && quedaContainer) {
-      altaContainer.innerHTML = "";
-      quedaContainer.innerHTML = "";
-
-      const sortedAlta = [...window.mockData.products].sort((a, b) => b.weeklyGrowth - a.weeklyGrowth).slice(0, 3);
-      const sortedQueda = [...window.mockData.products].sort((a, b) => a.weeklyGrowth - b.weeklyGrowth).slice(0, 3);
-
-      sortedAlta.forEach(p => {
-        const item = document.createElement("div");
-        item.className = "widget-item";
-        item.innerHTML = `
-          <img src="${p.image}" alt="">
-          <span class="title">${p.title}</span>
-          <span class="stat" style="color: var(--accent-lime);">+${p.weeklyGrowth}%</span>
         `;
-        altaContainer.appendChild(item);
-      });
-
-      sortedQueda.forEach(p => {
-        const item = document.createElement("div");
-        item.className = "widget-item";
-        item.innerHTML = `
-          <img src="${p.image}" alt="">
-          <span class="title">${p.title}</span>
-          <span class="stat" style="color: var(--accent-red);">${p.weeklyGrowth}%</span>
-        `;
-        quedaContainer.appendChild(item);
+        feedContainer.appendChild(item);
       });
     }
 
-    updateSalesChartSVG();
+    // 4. Hydrate Products Ranking Table
+    const tableBody = document.getElementById("ranking-table-body");
+    if (tableBody && window.mockData.products) {
+      let rankingList = [...window.mockData.products];
+      if (state.rankingPeriod === "diario") {
+        rankingList.sort((a, b) => b.salesToday - a.salesToday);
+        const diarioBtn = document.getElementById("rank-tab-diario");
+        const semanalBtn = document.getElementById("rank-tab-semanal");
+        if (diarioBtn) diarioBtn.classList.add("active");
+        if (semanalBtn) semanalBtn.classList.remove("active");
+      } else {
+        rankingList.sort((a, b) => b.sales - a.sales);
+        const diarioBtn = document.getElementById("rank-tab-diario");
+        const semanalBtn = document.getElementById("rank-tab-semanal");
+        if (diarioBtn) diarioBtn.classList.remove("active");
+        if (semanalBtn) semanalBtn.classList.add("active");
+      }
+
+      tableBody.innerHTML = "";
+      rankingList.forEach((p, idx) => {
+        const isShowcase = state.showcase.includes(p.id);
+        const row = document.createElement("tr");
+        row.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+        row.innerHTML = `
+          <td style="padding: 12px; display: flex; align-items: center; gap: 10px;">
+            <span style="font-weight: 800; color: #FF6A00; width: 20px;">#${idx + 1}</span>
+            <img src="${p.image}" style="width: 34px; height: 34px; border-radius: 6px; object-fit: cover;" alt="">
+            <span style="font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: #fff;" title="${p.title}">${p.title}</span>
+          </td>
+          <td style="padding: 12px; font-weight: 700; color: #fff;">R$ ${(p.sales * 89.9).toLocaleString("pt-BR", {maximumFractionDigits: 0})}</td>
+          <td style="padding: 12px; color: ${p.weeklyGrowth >= 0 ? "#C8FF00" : "#FF4D4D"}; font-weight: 800;">
+            ${p.weeklyGrowth >= 0 ? "▲ +" : "▼ "}${p.weeklyGrowth}%
+          </td>
+          <td style="padding: 12px; color: var(--text-secondary);">${p.creatorsCount} criadores</td>
+          <td style="padding: 12px;"><b style="color: #FF6A00; font-size: 14px;">${calculateScoreIA(p)}</b></td>
+          <td style="padding: 12px; text-align: right;">
+            <button class="btn-secondary" style="height: 28px; font-size: 11px; padding: 0 10px; border-radius: 6px; margin-right: 6px;" onclick="openProductDetail('${p.id}')">Score IA</button>
+            <button class="btn-primary" style="height: 28px; font-size: 11px; padding: 0 10px; border-radius: 6px; background: ${isShowcase ? "#C8FF00" : "#FF6A00"}; color: #000; font-weight: 800; border: none;" onclick="toggleShowcaseProduct('${p.id}')">
+              ${isShowcase ? "✓ Vitrine" : "+ Vitrine"}
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // 5. Hydrate Goals Progress Panel
+    const goalsContainer = document.getElementById("saas-goals-container");
+    if (goalsContainer && window.mockData.goals) {
+      goalsContainer.innerHTML = "";
+      window.mockData.goals.forEach(g => {
+        const pct = Math.min(100, (g.current / g.target) * 100).toFixed(1);
+        const row = document.createElement("div");
+        row.className = "saas-goal-row";
+        row.innerHTML = `
+          <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #fff;">
+            <span>${g.title}</span>
+            <span>${g.unit === "R$" ? `R$ ${g.current.toLocaleString("pt-BR")}` : `${g.current} ${g.unit}`} / ${g.unit === "R$" ? `R$ ${g.target.toLocaleString("pt-BR")}` : `${g.target} ${g.unit}`} (${pct}%)</span>
+          </div>
+          <div class="saas-goal-track">
+            <div class="saas-goal-fill" style="width: ${pct}%; background: ${g.color}; box-shadow: 0 0 10px ${g.color};"></div>
+          </div>
+        `;
+        goalsContainer.appendChild(row);
+      });
+    }
+
+    // 6. Hydrate Weekly Calendar Panel
+    const calContainer = document.getElementById("saas-calendar-container");
+    if (calContainer && window.mockData.weeklyCalendar) {
+      calContainer.innerHTML = "";
+      window.mockData.weeklyCalendar.forEach(c => {
+        const item = document.createElement("div");
+        item.style.cssText = "background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 12px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;";
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: rgba(200,255,0,0.12); color: #C8FF00; font-size: 11px; font-weight: 900; padding: 6px 10px; border-radius: 8px; text-align: center; min-width: 55px;">
+              ${c.day}<br/><small style="font-size: 9px; font-weight: 400; color: #fff;">${c.time}</small>
+            </div>
+            <div>
+              <h5 style="font-size: 13px; font-weight: 700; color: #fff; margin: 0;">${c.title}</h5>
+              <span style="font-size: 11px; color: var(--text-muted);">${c.product}</span>
+            </div>
+          </div>
+          <span style="font-size: 10px; font-weight: 800; color: #FF6A00; background: rgba(255,106,0,0.15); padding: 3px 8px; border-radius: 4px;">${c.status.toUpperCase()}</span>
+        `;
+        calContainer.appendChild(item);
+      });
+    }
+
+    // 7. Hydrate Notifications Drawer List
+    const notifContainer = document.getElementById("notifications-list-container");
+    if (notifContainer && window.mockData.notifications) {
+      notifContainer.innerHTML = "";
+      window.mockData.notifications.forEach(n => {
+        const card = document.createElement("div");
+        card.style.cssText = "background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 12px;";
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <strong style="font-size: 13px; color: #fff;">${n.icon} ${n.title}</strong>
+            <span style="font-size: 10px; color: var(--text-muted);">${n.time}</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">${n.desc}</p>
+        `;
+        notifContainer.appendChild(card);
+      });
+    }
   };
 
   window.switchRankingTab = function(period) {
@@ -1723,58 +1911,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.toggleAutoUpdates = function(btn) {
     state.autoUpdatesActive = !state.autoUpdatesActive;
     btn.classList.toggle("active", state.autoUpdatesActive);
-  };
-
-  // --- TIKTOK SHOP OS MULTI-TAB ROUTER & UTILITIES ---
-  window.switchTab = function(tabName) {
-    state.currentTab = tabName;
-    
-    const screens = [
-      "dashboard-screen",
-      "analytics-screen",
-      "lives-studio-screen",
-      "inteligencia-screen",
-      "lives-screen",
-      "videos-screen",
-      "fixar-screen",
-      "descobrir-screen",
-      "samples-screen",
-      "ai-strategic-screen",
-      "extension-screen"
-    ];
-    
-    screens.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = "none";
-    });
-
-    const map = {
-      dashboard: "dashboard-screen",
-      analytics: "analytics-screen",
-      "lives-studio": "lives-studio-screen",
-      inteligencia: "inteligencia-screen",
-      lives: "lives-screen",
-      videos: "videos-screen",
-      fixar: "fixar-screen",
-      descobrir: "descobrir-screen",
-      samples: "samples-screen",
-      "ai-strategic": "ai-strategic-screen",
-      extension: "extension-screen"
-    };
-
-    const targetId = map[tabName] || "dashboard-screen";
-    const targetEl = document.getElementById(targetId);
-    if (targetEl) targetEl.style.display = "block";
-
-    // Update sidebar active indicator
-    document.querySelectorAll(".sidebar-nav-os .menu-item").forEach(btn => {
-      btn.classList.toggle("active", btn.getAttribute("data-tab") === tabName);
-    });
-
-    if (tabName === "dashboard") renderDashboard();
-    if (tabName === "descobrir") renderDiscover();
-
-    closeMobileSidebar();
   };
 
   // --- REAL-TIME TIKTOK SHOP DATA SYNC ENGINE ---
