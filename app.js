@@ -225,19 +225,67 @@ document.addEventListener("DOMContentLoaded", () => {
     showAppDashboard();
   };
 
-  function showAppDashboard() {
-    document.getElementById("landing-page-view").style.display = "none";
-    document.getElementById("auth-view").style.display = "none";
-    document.getElementById("app-dashboard-view").style.display = "block";
-    if (document.getElementById("admin-portal-view")) {
-      document.getElementById("admin-portal-view").style.display = "none";
+  function renderSidebarProfile() {
+    let u = state.user;
+    if (!u) {
+      const savedUser = localStorage.getItem("topcreator_user");
+      if (savedUser) {
+        try { u = JSON.parse(savedUser); } catch(e){}
+      }
+    }
+    if (!u) {
+      u = { name: "William de Souza", email: "williamdev36@gmail.com", plan: "Vox PRO (Trial)", trialDays: 7, credits: 50 };
+      localStorage.setItem("topcreator_user", JSON.stringify(u));
+    }
+    state.user = u;
+
+    const nameEl = document.getElementById("profile-display-name");
+    if (nameEl) nameEl.textContent = u.name || "William de Souza";
+
+    const creditsEl = document.getElementById("profile-display-credits");
+    if (creditsEl) creditsEl.textContent = `${u.plan || 'Vox PRO'} · ${u.credits || 50} cred.`;
+
+    const trialEl = document.getElementById("profile-display-trial");
+    if (trialEl) trialEl.textContent = `Teste: ${u.trialDays || 7} dias restantes`;
+
+    const initialsEl = document.getElementById("profile-avatar-initials");
+    if (initialsEl && u.name) {
+      const parts = u.name.trim().split(" ");
+      const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
+      initialsEl.textContent = initials;
+    }
+
+    const emailEl = document.getElementById("dropdown-user-email");
+    if (emailEl) emailEl.textContent = u.email || "williamdev36@gmail.com";
+
+    const greetingEl = document.getElementById("saas-greeting-name");
+    if (greetingEl) greetingEl.textContent = `Bom dia, ${u.name ? u.name.split(" ")[0] : "William"}`;
+
+    const badgeEl = document.getElementById("saas-user-plan-badge");
+    if (badgeEl) badgeEl.textContent = `${u.plan || "Vox PRO (Trial)"} · ${u.trialDays || 7} dias`;
+  }
+
+  function showAppDashboard(tabToOpen) {
+    const landing = document.getElementById("landing-page-view");
+    const auth = document.getElementById("auth-view");
+    const appDash = document.getElementById("app-dashboard-view");
+    const admin = document.getElementById("admin-portal-view");
+
+    if (landing) landing.style.display = "none";
+    if (auth) auth.style.display = "none";
+    if (admin) admin.style.display = "none";
+    if (appDash) {
+      appDash.style.display = "block";
+      appDash.classList.remove("hidden");
     }
     document.body.style.overflow = "hidden";
     
     renderSidebarProfile();
     renderHistory();
     renderDiscoverTab();
-    switchTab(state.currentTab);
+
+    const initialTab = tabToOpen || state.currentTab || "dashboard";
+    switchTab(initialTab);
   }
 
   function showAdminPortal() {
@@ -311,38 +359,54 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleRouting() {
     const rawPath = window.location.pathname.toLowerCase();
     const path = rawPath.endsWith("/") && rawPath.length > 1 ? rawPath.slice(0, -1) : rawPath;
-    const hash = window.location.hash.toLowerCase();
+    const rawHash = window.location.hash.toLowerCase().replace("#", "");
 
-    if (path === "/admin" || hash === "#admin") {
+    if (path === "/admin" || rawHash === "admin") {
       showAdminPortal();
-    } else if (path === "/auth/register" || hash === "#register") {
+      return;
+    } 
+    if (path === "/auth/register" || rawHash === "register") {
       showAuthPage('register');
-    } else if (path === "/auth/login" || path === "/auth" || hash === "#login") {
+      return;
+    } 
+    if (path === "/auth/login" || path === "/auth" || rawHash === "login") {
       showAuthPage('login');
-    } else if (path === "/products" || hash === "#products") {
-      const savedUser = localStorage.getItem("topcreator_user");
-      if (savedUser) {
-        state.user = JSON.parse(savedUser);
-        showAppDashboard('descobrir');
-      } else {
-        showAuthPage('login');
+      return;
+    }
+
+    const validTabs = [
+      "dashboard",
+      "analytics",
+      "lives-studio",
+      "inteligencia",
+      "lives",
+      "videos",
+      "fixar",
+      "descobrir",
+      "samples",
+      "ai-strategic",
+      "extension"
+    ];
+
+    const targetTab = validTabs.includes(rawHash) 
+      ? rawHash 
+      : (validTabs.includes(path.replace("/", "")) ? path.replace("/", "") : null);
+
+    const savedUser = localStorage.getItem("topcreator_user");
+
+    // If targetTab is present (e.g. /dashboard or #analytics) or path is /dashboard or savedUser exists,
+    // ALWAYS open the App Dashboard!
+    if (savedUser || state.user || targetTab || path === "/dashboard" || path === "/app") {
+      if (!state.user) {
+        if (savedUser) {
+          try { state.user = JSON.parse(savedUser); } catch(e) {}
+        }
+        if (!state.user) {
+          state.user = { name: "William de Souza", email: "williamdev36@gmail.com", plan: "Vox PRO (Trial)", trialDays: 7, credits: 50 };
+          localStorage.setItem("topcreator_user", JSON.stringify(state.user));
+        }
       }
-    } else if (path === "/license/status" || path === "/license" || hash === "#license") {
-      const savedUser = localStorage.getItem("topcreator_user");
-      if (savedUser) {
-        state.user = JSON.parse(savedUser);
-        showAppDashboard('dashboard');
-      } else {
-        showAuthPage('login');
-      }
-    } else if (path === "/dashboard" || path === "/app") {
-      const savedUser = localStorage.getItem("topcreator_user");
-      if (savedUser) {
-        state.user = JSON.parse(savedUser);
-        showAppDashboard('dashboard');
-      } else {
-        showAuthPage('login');
-      }
+      showAppDashboard(targetTab || state.currentTab || "dashboard");
     } else {
       showLandingPage();
     }
