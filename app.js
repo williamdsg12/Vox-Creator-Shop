@@ -49,16 +49,77 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = "auto";
   }
 
-  function showAuthPage() {
+  function showAuthPage(tab = 'login') {
     document.getElementById("landing-page-view").style.display = "none";
     document.getElementById("auth-view").style.display = "flex";
     document.getElementById("app-dashboard-view").style.display = "none";
     if (document.getElementById("admin-portal-view")) {
       document.getElementById("admin-portal-view").style.display = "none";
     }
-    document.getElementById("auth-error").style.display = "none";
+    const errorEl = document.getElementById("auth-error");
+    if (errorEl) errorEl.style.display = "none";
     document.body.style.overflow = "hidden";
+    toggleUserAuthTab(tab);
   }
+
+  function toggleUserAuthTab(tab) {
+    const loginForm = document.getElementById("user-login-form");
+    const regForm = document.getElementById("user-register-form");
+    const tabLoginBtn = document.getElementById("user-tab-login");
+    const tabRegBtn = document.getElementById("user-tab-register");
+    const errorEl = document.getElementById("auth-error");
+
+    if (errorEl) errorEl.style.display = "none";
+
+    if (tab === 'register') {
+      if (loginForm) loginForm.style.display = "none";
+      if (regForm) regForm.style.display = "block";
+      if (tabLoginBtn) tabLoginBtn.classList.remove("active");
+      if (tabRegBtn) tabRegBtn.classList.add("active");
+    } else {
+      if (loginForm) loginForm.style.display = "block";
+      if (regForm) regForm.style.display = "none";
+      if (tabLoginBtn) tabLoginBtn.classList.add("active");
+      if (tabRegBtn) tabRegBtn.classList.remove("active");
+    }
+  }
+
+  window.toggleUserAuthTab = toggleUserAuthTab;
+
+  window.submitUserRegister = async function(e) {
+    e.preventDefault();
+    const name = document.getElementById("reg-name").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
+    const pass = document.getElementById("reg-pass").value;
+    const errorEl = document.getElementById("auth-error");
+
+    try {
+      if (window.voxApi) {
+        const res = await window.voxApi.register(email, pass, name);
+        state.user = {
+          name: res.user.name || name,
+          email: res.user.email,
+          role: res.user.role,
+          credits: 50,
+          plan: "Vox PRO (Trial)",
+          trialDays: 7
+        };
+        localStorage.setItem("topcreator_user", JSON.stringify(state.user));
+        showAppDashboard();
+        return;
+      }
+    } catch (err) {
+      if (errorEl) {
+        errorEl.textContent = err.message || "Erro ao realizar cadastro.";
+        errorEl.style.display = "block";
+      }
+      return;
+    }
+
+    state.user = { name, email, credits: 50, plan: "Vox PRO (Trial)", trialDays: 7 };
+    localStorage.setItem("topcreator_user", JSON.stringify(state.user));
+    showAppDashboard();
+  };
 
   function showAppDashboard() {
     document.getElementById("landing-page-view").style.display = "none";

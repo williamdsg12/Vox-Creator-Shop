@@ -53,9 +53,9 @@
       </nav>
       <div style="display: flex; gap: 14px; align-items: center;">
         <button class="btn-secondary" style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.03); height: 40px; padding: 0 18px; border-radius: 99px; font-weight: 600; color: #fff;"
-          onclick="showAuthPage()">Entrar</button>
+          onclick="showAuthPage('login')">Entrar</button>
         <button class="btn-hero-primary" style="height: 42px; padding: 0 22px; font-size: 14px;"
-          onclick="showAuthPage()">Começar Grátis</button>
+          onclick="showAuthPage('register')">Começar Grátis</button>
       </div>
     </header>
 
@@ -802,32 +802,55 @@
   </div>
 
 
-  <!-- ==================== VIEW 2: AUTH VIEW (LOGIN) ==================== -->
+  <!-- ==================== VIEW 2: AUTH VIEW (LOGIN / REGISTER) ==================== -->
   <div id="auth-view" style="display: none;" class="auth-container">
-    <div class="auth-card animate-fade-in">
-      <div class="auth-header"
-        style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 24px;">
-        <div class="landing-logo-container" style="cursor: default;">
-          <img src="vox-logo-full-dark.svg" alt="Vox Creator Shop" class="landing-logo-img" style="height: 58px;">
+    <div class="auth-card animate-fade-in" style="position: relative; max-width: 440px; width: 100%; margin: auto;">
+      <button onclick="showLandingPage(); window.location.hash='';" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px;" title="Voltar para a Landing">✕</button>
+      
+      <div class="auth-header" style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px;">
+        <div class="landing-logo-container" style="cursor: pointer;" onclick="showLandingPage(); window.location.hash='';">
+          <img src="vox-logo-full-dark.svg" alt="Vox Creator Shop" class="landing-logo-img" style="height: 52px;">
         </div>
-        <h2>Entrar na conta</h2>
+        <h2 id="user-auth-title" style="font-size: 20px; font-weight: 700; margin: 0;">Acessar o Vox Creator Shop</h2>
       </div>
-      <div id="auth-error" class="auth-error"></div>
-      <form class="auth-form" onsubmit="submitLogin(event)">
-        <div class="form-group">
-          <label for="login-email">E-mail</label>
-          <input type="email" id="login-email" required placeholder="Ex: williamdev36@gmail.com">
+
+      <!-- Auth Switcher Tabs -->
+      <div class="admin-tabs" style="margin-bottom: 20px;">
+        <button id="user-tab-login" class="admin-tab-btn active" onclick="toggleUserAuthTab('login')">Entrar</button>
+        <button id="user-tab-register" class="admin-tab-btn" onclick="toggleUserAuthTab('register')">Cadastrar</button>
+      </div>
+
+      <div id="auth-error" class="auth-error" style="display: none; margin-bottom: 16px; padding: 10px; background: rgba(249,58,55,0.1); border: 1px solid rgba(249,58,55,0.2); border-radius: 8px; color: #ff4d4d; font-size: 13px;"></div>
+
+      <!-- Form 1: LOGIN -->
+      <form id="user-login-form" class="auth-form" onsubmit="submitLogin(event)">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label for="login-email" style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">E-mail</label>
+          <input type="email" id="login-email" required placeholder="seu.email@exemplo.com" class="settings-input" style="width: 100%; height: 44px; border-radius: 8px;">
         </div>
-        <div class="form-group">
-          <label for="login-pass">Senha</label>
-          <input type="password" id="login-pass" required placeholder="Digite sua senha">
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="login-pass" style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Senha</label>
+          <input type="password" id="login-pass" required placeholder="Digite sua senha" class="settings-input" style="width: 100%; height: 44px; border-radius: 8px;">
         </div>
-        <button type="submit" class="btn-primary" style="height: 48px; width: 100%;">Entrar</button>
+        <button type="submit" class="btn-primary" style="height: 48px; width: 100%; font-weight: 700;">Entrar na Conta</button>
       </form>
-      <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 20px;">
-        Não tem conta? <a href="#" style="color: var(--accent-orange); text-decoration: none;"
-          onclick="alert('Funcionalidade de cadastro simulada: Use o login williamdev36@gmail.com / Caverna12@')">Cadastre-se</a>
-      </p>
+
+      <!-- Form 2: REGISTER -->
+      <form id="user-register-form" class="auth-form" onsubmit="submitUserRegister(event)" style="display: none;">
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label for="reg-name" style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Seu Nome ou Nome do Canal</label>
+          <input type="text" id="reg-name" required placeholder="Ex: Lucas Criador Live" class="settings-input" style="width: 100%; height: 42px; border-radius: 8px;">
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label for="reg-email" style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">E-mail Corporativo ou Pessoal</label>
+          <input type="email" id="reg-email" required placeholder="seu.email@exemplo.com" class="settings-input" style="width: 100%; height: 42px; border-radius: 8px;">
+        </div>
+        <div class="form-group" style="margin-bottom: 18px;">
+          <label for="reg-pass" style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Senha (mínimo 6 caracteres)</label>
+          <input type="password" id="reg-pass" required minlength="6" placeholder="Crie uma senha segura" class="settings-input" style="width: 100%; height: 42px; border-radius: 8px;">
+        </div>
+        <button type="submit" class="btn-primary btn-cta-lime" style="height: 48px; width: 100%; font-weight: 700; color: #000;">Criar Conta Grátis</button>
+      </form>
     </div>
   </div>
 
