@@ -33,6 +33,31 @@ window.toggleUserAuthTab = function(tab) {
   }
 };
 
+window.showAdminPortal = function() {
+  const landing = document.getElementById("landing-page-view");
+  const auth = document.getElementById("auth-view");
+  const dash = document.getElementById("app-dashboard-view");
+  const admin = document.getElementById("admin-portal-view");
+  if (landing) landing.style.display = "none";
+  if (auth) auth.style.display = "none";
+  if (dash) dash.style.display = "none";
+  if (admin) admin.style.display = "block";
+  document.body.style.overflow = "auto";
+  if (window.renderAdminView) window.renderAdminView();
+};
+
+window.showAppDashboard = function() {
+  const landing = document.getElementById("landing-page-view");
+  const auth = document.getElementById("auth-view");
+  const dash = document.getElementById("app-dashboard-view");
+  const admin = document.getElementById("admin-portal-view");
+  if (landing) landing.style.display = "none";
+  if (auth) auth.style.display = "none";
+  if (dash) dash.style.display = "block";
+  if (admin) admin.style.display = "none";
+  document.body.style.overflow = "hidden";
+};
+
 window.showAuthPage = function(tab = 'login') {
   const landing = document.getElementById("landing-page-view");
   const auth = document.getElementById("auth-view");
