@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
           trialDays: 7
         };
         localStorage.setItem("topcreator_user", JSON.stringify(state.user));
-        showAppDashboard();
+        navigateTo("/dashboard");
         return;
       }
     } catch (err) {
@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     state.user = { name, email, credits: 50, plan: "Vox PRO (Trial)", trialDays: 7 };
     localStorage.setItem("topcreator_user", JSON.stringify(state.user));
-    showAppDashboard();
+    navigateTo("/dashboard");
   };
 
   function renderSidebarProfile() {
@@ -533,7 +533,7 @@ document.addEventListener("DOMContentLoaded", () => {
           trialDays: 7
         };
         localStorage.setItem("topcreator_user", JSON.stringify(state.user));
-        showAppDashboard();
+        navigateTo("/dashboard");
         return;
       }
     } catch (err) {
@@ -549,7 +549,7 @@ document.addEventListener("DOMContentLoaded", () => {
         trialDays: 7
       };
       localStorage.setItem("topcreator_user", JSON.stringify(state.user));
-      showAppDashboard();
+      navigateTo("/dashboard");
     } else {
       errorEl.textContent = "Preencha o e-mail para continuar.";
       errorEl.style.display = "block";
