@@ -417,8 +417,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Bind route change listeners
   window.addEventListener("popstate", handleRouting);
   window.addEventListener("hashchange", handleRouting);
-  // Trigger initial routing
-  setTimeout(handleRouting, 50);
+  // Trigger initial routing immediately
+  handleRouting();
 
   // --- NEW UNIFIED MULTI-TAB ROUTER AND SCREEN RENDERERS ---
   function renderLives() {
@@ -455,6 +455,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function switchTab(tabName) {
     state.currentTab = tabName;
+    const targetHash = `#${tabName}`;
+    if (window.location.hash !== targetHash || !window.location.pathname.includes('/dashboard')) {
+      try {
+        history.pushState(null, "", `/dashboard${targetHash}`);
+      } catch (e) {}
+    }
 
     const map = {
       dashboard: "dashboard-screen",

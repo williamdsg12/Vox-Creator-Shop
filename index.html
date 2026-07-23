@@ -34,6 +34,17 @@
   <div class="glow-orb glow-orb-3"></div>
   <div class="glow-orb glow-orb-4"></div>
 
+  <!-- Critical Route Protector for Instant Dashboard Render -->
+  <script>
+    (function() {
+      var p = window.location.pathname.toLowerCase();
+      var h = window.location.hash.toLowerCase();
+      if (p.indexOf('/dashboard') !== -1 || p.indexOf('/app') !== -1 || h.indexOf('#dashboard') !== -1 || h.indexOf('#analytics') !== -1 || h.indexOf('#lives') !== -1 || h.indexOf('#descobrir') !== -1 || h.indexOf('#samples') !== -1 || h.indexOf('#inteligencia') !== -1 || h.indexOf('#extension') !== -1 || h.indexOf('#ai-strategic') !== -1 || h.indexOf('#videos') !== -1 || h.indexOf('#fixar') !== -1) {
+        document.write('<style>#landing-page-view,#auth-view{display:none !important;}#app-dashboard-view{display:block !important;}</style>');
+      }
+    })();
+  </script>
+
   <!-- ==================== VIEW 1: LANDING PAGE ==================== -->
   <div id="landing-page-view">
     
