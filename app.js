@@ -1,4 +1,38 @@
-// --- GLOBAL WINDOW ROUTER & NAVIGATION FUNCTIONS (NO HASH) ---
+// --- MASTER VIEW SWITCHER & ROUTER FUNCTIONS ---
+window.setActiveView = function(viewName, extraParam) {
+  const landing = document.getElementById("landing-page-view");
+  const auth = document.getElementById("auth-view");
+  const dash = document.getElementById("app-dashboard-view");
+  const admin = document.getElementById("admin-portal-view");
+
+  // Strictly hide all views
+  if (landing) landing.style.display = "none";
+  if (auth) auth.style.display = "none";
+  if (dash) dash.style.display = "none";
+  if (admin) admin.style.display = "none";
+
+  document.body.style.overflow = "auto";
+
+  if (viewName === "landing") {
+    if (landing) landing.style.display = "block";
+  } else if (viewName === "auth") {
+    if (landing) landing.style.display = "block";
+    if (auth) {
+      auth.style.display = "flex";
+      auth.scrollTop = 0;
+    }
+    document.body.style.overflow = "hidden";
+    if (window.toggleUserAuthTab) window.toggleUserAuthTab(extraParam || "login");
+  } else if (viewName === "dashboard") {
+    if (dash) dash.style.display = "block";
+    document.body.style.overflow = "hidden";
+    if (extraParam && window.switchTab) window.switchTab(extraParam);
+  } else if (viewName === "admin") {
+    if (admin) admin.style.display = "block";
+    if (window.renderAdminView) window.renderAdminView();
+  }
+};
+
 window.navigateTo = function(path) {
   if (window.location.pathname !== path) {
     window.history.pushState({}, '', path);
@@ -7,15 +41,7 @@ window.navigateTo = function(path) {
 };
 
 window.showLandingPage = function() {
-  const landing = document.getElementById("landing-page-view");
-  const auth = document.getElementById("auth-view");
-  const dash = document.getElementById("app-dashboard-view");
-  const admin = document.getElementById("admin-portal-view");
-  if (landing) landing.style.display = "block";
-  if (auth) auth.style.display = "none";
-  if (dash) dash.style.display = "none";
-  if (admin) admin.style.display = "none";
-  document.body.style.overflow = "auto";
+  window.setActiveView("landing");
 };
 
 window.toggleUserAuthTab = function(tab) {
@@ -50,44 +76,15 @@ window.toggleUserAuthTab = function(tab) {
 };
 
 window.showAdminPortal = function() {
-  const landing = document.getElementById("landing-page-view");
-  const auth = document.getElementById("auth-view");
-  const dash = document.getElementById("app-dashboard-view");
-  const admin = document.getElementById("admin-portal-view");
-  if (landing) landing.style.display = "none";
-  if (auth) auth.style.display = "none";
-  if (dash) dash.style.display = "none";
-  if (admin) admin.style.display = "block";
-  document.body.style.overflow = "auto";
-  if (window.renderAdminView) window.renderAdminView();
+  window.setActiveView("admin");
 };
 
 window.showAppDashboard = function(tabId) {
-  const landing = document.getElementById("landing-page-view");
-  const auth = document.getElementById("auth-view");
-  const dash = document.getElementById("app-dashboard-view");
-  const admin = document.getElementById("admin-portal-view");
-  if (landing) landing.style.display = "none";
-  if (auth) auth.style.display = "none";
-  if (dash) dash.style.display = "block";
-  if (admin) admin.style.display = "none";
-  document.body.style.overflow = "hidden";
-  if (tabId && window.switchTab) window.switchTab(tabId);
+  window.setActiveView("dashboard", tabId);
 };
 
 window.showAuthPage = function(tab = 'login') {
-  const landing = document.getElementById("landing-page-view");
-  const auth = document.getElementById("auth-view");
-  const dash = document.getElementById("app-dashboard-view");
-  const admin = document.getElementById("admin-portal-view");
-  if (landing) landing.style.display = "none";
-  if (auth) auth.style.display = "flex";
-  if (dash) dash.style.display = "none";
-  if (admin) admin.style.display = "none";
-  const errorEl = document.getElementById("auth-error");
-  if (errorEl) errorEl.style.display = "none";
-  document.body.style.overflow = "hidden";
-  window.toggleUserAuthTab(tab);
+  window.setActiveView("auth", tab);
 };
 
 document.addEventListener("DOMContentLoaded", () => {
