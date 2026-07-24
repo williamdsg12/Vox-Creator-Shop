@@ -1,6 +1,10 @@
+// api/index.js — Vercel Serverless Function entrypoint for NestJS Backend
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from '../dist-backend/app.module.js';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const { AppModule } = require('../dist-backend/app.module.js');
 
 let app;
 

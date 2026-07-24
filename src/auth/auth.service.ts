@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SupabaseService } from '../common/supabase.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 const ADMIN_EMAIL = 'admin@voxcreator.shop';
 
