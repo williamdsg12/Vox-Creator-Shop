@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
           plan: "Vox PRO (Trial)",
           trialDays: 7
         };
-        localStorage.setItem("topcreator_user", JSON.stringify(state.user));
+        localStorage.setItem("voxcreator_user", JSON.stringify(state.user));
         navigateTo("/dashboard");
         return;
       }
@@ -221,21 +221,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     state.user = { name, email, credits: 50, plan: "Vox PRO (Trial)", trialDays: 7 };
-    localStorage.setItem("topcreator_user", JSON.stringify(state.user));
+    localStorage.setItem("voxcreator_user", JSON.stringify(state.user));
     navigateTo("/dashboard");
   };
 
   function renderSidebarProfile() {
     let u = state.user;
     if (!u) {
-      const savedUser = localStorage.getItem("topcreator_user");
+      const savedUser = localStorage.getItem("voxcreator_user");
       if (savedUser) {
         try { u = JSON.parse(savedUser); } catch(e){}
       }
     }
     if (!u) {
-      u = { name: "William de Souza", email: "williamdev36@gmail.com", plan: "Vox PRO (Trial)", trialDays: 7, credits: 50 };
-      localStorage.setItem("topcreator_user", JSON.stringify(u));
+      u = { name: "William de Souza", email: "[EMAIL_ADDRESS]", plan: "Vox PRO (Trial)", trialDays: 7, credits: 50 };
+      localStorage.setItem("voxcreator_user", JSON.stringify(u));
     }
     state.user = u;
 
@@ -388,25 +388,29 @@ document.addEventListener("DOMContentLoaded", () => {
       "extension"
     ];
 
-    const targetTab = validTabs.includes(rawHash) 
-      ? rawHash 
-      : (validTabs.includes(path.replace("/", "")) ? path.replace("/", "") : null);
+    const cleanPathTab = validTabs.find(t => path === `/${t}`);
+    const hashTab = validTabs.includes(rawHash) ? rawHash : null;
+    const targetTab = hashTab || cleanPathTab || (path === "/dashboard" || path === "/app" ? "dashboard" : null);
 
-    const savedUser = localStorage.getItem("topcreator_user");
+    const savedUser = localStorage.getItem("voxcreator_user") || localStorage.getItem("topcreator_user");
 
-    // If targetTab is present (e.g. /dashboard or #analytics) or path is /dashboard or savedUser exists,
-    // ALWAYS open the App Dashboard!
-    if (savedUser || state.user || targetTab || path === "/dashboard" || path === "/app") {
+    // If targetTab is present or savedUser/state.user exists, open App Dashboard
+    if (savedUser || state.user || targetTab) {
       if (!state.user) {
         if (savedUser) {
           try { state.user = JSON.parse(savedUser); } catch(e) {}
         }
         if (!state.user) {
           state.user = { name: "William de Souza", email: "williamdev36@gmail.com", plan: "Vox PRO (Trial)", trialDays: 7, credits: 50 };
-          localStorage.setItem("topcreator_user", JSON.stringify(state.user));
+          localStorage.setItem("voxcreator_user", JSON.stringify(state.user));
         }
       }
-      showAppDashboard(targetTab || state.currentTab || "dashboard");
+      const finalTab = targetTab || state.currentTab || "dashboard";
+      const expectedUrl = finalTab === "dashboard" ? "/dashboard" : `/${finalTab}`;
+      if (window.location.pathname !== expectedUrl || window.location.hash.length > 0) {
+        try { history.replaceState(null, "", expectedUrl); } catch(e) {}
+      }
+      showAppDashboard(finalTab);
     } else {
       showLandingPage();
     }
@@ -453,12 +457,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Extensão Chrome OS inicializada
   }
 
-  function switchTab(tabName) {
+  function switchTab(tabName, skipPush = false) {
     state.currentTab = tabName;
-    const targetHash = `#${tabName}`;
-    if (window.location.hash !== targetHash || !window.location.pathname.includes('/dashboard')) {
+    const targetUrl = tabName === "dashboard" ? "/dashboard" : `/${tabName}`;
+    if (!skipPush && (window.location.pathname !== targetUrl || window.location.hash.length > 0)) {
       try {
-        history.pushState(null, "", `/dashboard${targetHash}`);
+        history.pushState(null, "", targetUrl);
       } catch (e) {}
     }
 
