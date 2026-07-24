@@ -121,8 +121,37 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function useAuthSync() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromUrl = params.get("token");
+
+    if (tokenFromUrl) {
+      localStorage.setItem("vox_token", tokenFromUrl);
+      params.delete("token");
+      const cleanSearch = params.toString();
+      const newUrl =
+        window.location.pathname +
+        (cleanSearch ? `?${cleanSearch}` : "") +
+        window.location.hash;
+      window.history.replaceState(null, "", newUrl);
+    }
+
+    const currentToken =
+      localStorage.getItem("vox_token") ||
+      localStorage.getItem("voxcreator_token");
+
+    if (!currentToken) {
+      window.location.href = "https://voxcreatorshop.vercel.app/auth/login";
+    }
+  }, []);
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useAuthSync();
 
   return (
     <QueryClientProvider client={queryClient}>

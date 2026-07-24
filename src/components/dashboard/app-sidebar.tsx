@@ -65,7 +65,21 @@ const groups: { label: string; items: NavItem[] }[] = [
   },
 ];
 
+import { useQuery } from "@tanstack/react-query";
+import { getLicenseStatus } from "@/lib/api";
+
 export function AppSidebar() {
+  const { data: license } = useQuery({
+    queryKey: ["user-license"],
+    queryFn: () => getLicenseStatus().catch(() => null),
+    staleTime: 60000,
+  });
+
+  const userName = license?.user?.name || "William";
+  const initials = userName.slice(0, 2).toUpperCase();
+  const planName = license?.plan?.name || "Vox PRO";
+  const credits = license?.credits_remaining ?? 50;
+
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="px-3 pt-4 pb-2">
@@ -134,16 +148,16 @@ export function AppSidebar() {
         <div className="flex items-center gap-3 rounded-xl bg-sidebar-accent/60 p-2.5 group-data-[collapsible=icon]:hidden">
           <Avatar className="h-9 w-9 ring-2 ring-neon/40">
             <AvatarFallback className="bg-gradient-to-br from-neon to-amber text-neon-foreground font-bold text-sm">
-              W
+              {initials}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold">williamdsg12</p>
+            <p className="truncate text-sm font-semibold">{userName}</p>
             <p className="truncate text-[11px] text-muted-foreground">
-              Vox PRO · 50 créd.
+              {planName} · {credits} créd.
             </p>
             <p className="truncate text-[10px] text-neon font-medium">
-              Teste: 7 dias restantes
+              Sessão ativa
             </p>
           </div>
           <button
