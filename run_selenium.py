@@ -21,8 +21,8 @@ driver = webdriver.Chrome(options=chrome_options)
 driver.set_page_load_timeout(30)
 
 try:
-    print("Navigating to https://topcreator.app...")
-    driver.get("https://topcreator.app")
+    print("Navigating to https://voxcreatorshop.vercel.app...")
+    driver.get("https://voxcreatorshop.vercel.app")
     time.sleep(5)
     
     # Capture landing page

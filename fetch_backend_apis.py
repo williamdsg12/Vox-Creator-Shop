@@ -18,5 +18,5 @@ def fetch_api(url):
     except Exception as e:
         print(f"Error fetching {url}: {e}")
 
-fetch_api("https://topcreator.app/api/models")
-fetch_api("https://topcreator.app/api/presets")
+fetch_api("https://voxcreatorshop.vercel.app/api/models")
+fetch_api("https://voxcreatorshop.vercel.app/api/presets")

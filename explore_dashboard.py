@@ -30,7 +30,7 @@ def save_page(name):
 
 try:
     print("Navigating to login...")
-    driver.get("https://topcreator.app")
+    driver.get("https://voxcreatorshop.vercel.app")
     time.sleep(4)
     
     # Click Login
@@ -62,7 +62,7 @@ try:
             time.sleep(3)
         except Exception as e:
             print("Failed to click back button, reloading page...", e)
-            driver.get("https://topcreator.app")
+            driver.get("https://voxcreatorshop.vercel.app")
             time.sleep(5)
     except Exception as e:
         print("Failed to find/click script card:", e)

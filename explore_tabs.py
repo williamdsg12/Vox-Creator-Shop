@@ -28,7 +28,7 @@ def save_page(name):
 
 try:
     print("Navigating to login...")
-    driver.get("https://topcreator.app")
+    driver.get("https://voxcreatorshop.vercel.app")
     time.sleep(4)
     
     # Click Login

@@ -26,5 +26,5 @@ def summarize_api(url, name):
     except Exception as e:
         print(f"Error for {name}: {e}")
 
-summarize_api("https://topcreator.app/api/models", "models")
-summarize_api("https://topcreator.app/api/presets", "presets")
+summarize_api("https://voxcreatorshop.vercel.app/api/models", "models")
+summarize_api("https://voxcreatorshop.vercel.app/api/presets", "presets")
