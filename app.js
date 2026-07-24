@@ -190,39 +190,72 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.toggleUserAuthTab = toggleUserAuthTab;
 
-  window.submitUserRegister = async function(e) {
-    e.preventDefault();
-    const name = document.getElementById("reg-name").value.trim();
-    const email = document.getElementById("reg-email").value.trim();
-    const pass = document.getElementById("reg-pass").value;
+  window.submitLogin = async function(e) {
+    if (e) e.preventDefault();
+    const emailEl = document.getElementById("login-email");
+    const passEl = document.getElementById("login-pass");
     const errorEl = document.getElementById("auth-error");
 
+    const email = emailEl ? emailEl.value.trim() : "";
+    const pass = passEl ? passEl.value : "";
+
+    if (errorEl) errorEl.style.display = "none";
+
     try {
+      let token = "";
+      if (window.voxApi) {
+        const res = await window.voxApi.login(email, pass);
+        token = res.accessToken || localStorage.getItem("vox_token") || "preview_token_" + Date.now();
+        if (res.user) {
+          state.user = res.user;
+          localStorage.setItem("voxcreator_user", JSON.stringify(res.user));
+        }
+      } else {
+        token = localStorage.getItem("vox_token") || "preview_token_" + Date.now();
+      }
+
+      window.location.href = `/?token=${encodeURIComponent(token)}`;
+    } catch (err) {
+      if (errorEl) {
+        errorEl.textContent = err.message || "Erro ao realizar login. Verifique suas credenciais.";
+        errorEl.style.display = "block";
+      }
+    }
+  };
+
+  window.submitUserRegister = async function(e) {
+    if (e) e.preventDefault();
+    const nameEl = document.getElementById("reg-name");
+    const emailEl = document.getElementById("reg-email");
+    const passEl = document.getElementById("reg-pass");
+    const errorEl = document.getElementById("auth-error");
+
+    const name = nameEl ? nameEl.value.trim() : "";
+    const email = emailEl ? emailEl.value.trim() : "";
+    const pass = passEl ? passEl.value : "";
+
+    if (errorEl) errorEl.style.display = "none";
+
+    try {
+      let token = "";
       if (window.voxApi) {
         const res = await window.voxApi.register(email, pass, name);
-        state.user = {
-          name: res.user.name || name,
-          email: res.user.email,
-          role: res.user.role,
-          credits: 50,
-          plan: "Vox PRO (Trial)",
-          trialDays: 7
-        };
-        localStorage.setItem("voxcreator_user", JSON.stringify(state.user));
-        navigateTo("/dashboard");
-        return;
+        token = res.accessToken || localStorage.getItem("vox_token") || "preview_token_" + Date.now();
+        if (res.user) {
+          state.user = res.user;
+          localStorage.setItem("voxcreator_user", JSON.stringify(res.user));
+        }
+      } else {
+        token = localStorage.getItem("vox_token") || "preview_token_" + Date.now();
       }
+
+      window.location.href = `/?token=${encodeURIComponent(token)}`;
     } catch (err) {
       if (errorEl) {
         errorEl.textContent = err.message || "Erro ao realizar cadastro.";
         errorEl.style.display = "block";
       }
-      return;
     }
-
-    state.user = { name, email, credits: 50, plan: "Vox PRO (Trial)", trialDays: 7 };
-    localStorage.setItem("voxcreator_user", JSON.stringify(state.user));
-    navigateTo("/dashboard");
   };
 
   function renderSidebarProfile() {
