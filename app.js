@@ -499,17 +499,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Trigger tab-specific render engine
-    if (tabName === "dashboard") renderDashboard();
-    else if (tabName === "analytics") renderAnalytics();
-    else if (tabName === "lives-studio") renderLivesStudio();
-    else if (tabName === "inteligencia") renderIntelligence();
-    else if (tabName === "lives") renderLives();
-    else if (tabName === "videos") renderVideos();
-    else if (tabName === "fixar") renderFixar();
-    else if (tabName === "descobrir") renderDiscover();
-    else if (tabName === "samples") renderSamples();
-    else if (tabName === "ai-strategic") renderAiStrategic();
-    else if (tabName === "extension") renderExtension();
+    if (tabName === "dashboard" && typeof renderDashboard === "function") renderDashboard();
+    else if (tabName === "analytics" && typeof renderAnalytics === "function") renderAnalytics();
+    else if (tabName === "lives-studio" && typeof renderLivesStudio === "function") renderLivesStudio();
+    else if (tabName === "inteligencia" && typeof renderIntelligence === "function") renderIntelligence();
+    else if (tabName === "lives" && typeof renderLives === "function") renderLives();
+    else if (tabName === "videos" && typeof renderVideos === "function") renderVideos();
+    else if (tabName === "fixar" && typeof renderFixar === "function") renderFixar();
+    else if (tabName === "descobrir" && typeof renderDiscover === "function") renderDiscover();
+    else if (tabName === "samples" && typeof renderSamples === "function") renderSamples();
+    else if (tabName === "ai-strategic" && typeof renderAiStrategic === "function") renderAiStrategic();
+    else if (tabName === "extension" && typeof renderExtension === "function") renderExtension();
 
     if (window.closeMobileSidebar) window.closeMobileSidebar();
   }
@@ -1448,7 +1448,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- VISÃO GERAL / SAAS DASHBOARD ENTERPRISE RENDERER ---
-  window.renderDashboard = function() {
+  function renderDashboard() {
     startDashboardClock();
 
     // 1. Hydrate 12 KPI Metric Cards Grid
@@ -1738,6 +1738,8 @@ document.addEventListener("DOMContentLoaded", () => {
       circle.setAttribute("cy", data[data.length - 1]);
     }
   }
+
+  window.renderDashboard = renderDashboard;
 
   // inteligência tab renderer
   window.renderIntelligence = function() {
