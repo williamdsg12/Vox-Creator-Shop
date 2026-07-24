@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build:backend": "nest build && node -e \"import('fs').then(fs => fs.writeFileSync('dist-backend/package.json', '{\\\"type\\\": \\\"commonjs\\\"}'))\"",
-    "build": "nest build && node -e \"import('fs').then(fs => fs.writeFileSync('dist-backend/package.json', '{\\\"type\\\": \\\"commonjs\\\"}'))\" && vite build",
+    "build:backend": "nest build && node api/postbuild.js",
+    "build": "nest build && node api/postbuild.js && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
