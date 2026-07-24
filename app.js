@@ -1532,6 +1532,67 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    // 3.5. Hydrate Productivity Cards ("Continue de onde parou")
+    const prodContainer = document.getElementById("saas-productivity-container");
+    if (prodContainer && window.mockData?.productivity) {
+      prodContainer.innerHTML = "";
+      window.mockData.productivity.forEach(item => {
+        const card = document.createElement("div");
+        card.style.background = "rgba(255,255,255,0.03)";
+        card.style.border = "1px solid rgba(255,255,255,0.08)";
+        card.style.borderRadius = "12px";
+        card.style.padding = "14px";
+        card.style.display = "flex";
+        card.style.flexDirection = "column";
+        card.style.justifyContent = "space-between";
+        card.style.gap = "10px";
+        card.innerHTML = `
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 10px; font-weight: 800; color: ${item.color || '#C8FF00'}; text-transform: uppercase;">${item.type}</span>
+              <span style="font-size: 14px;">${item.icon}</span>
+            </div>
+            <h5 style="font-size: 13px; font-weight: 700; color: #fff; margin: 0 0 4px 0;">${item.title}</h5>
+            <p style="font-size: 11px; color: var(--text-muted); margin: 0;">${item.subtitle}</p>
+          </div>
+          <button class="btn-secondary" style="height: 28px; font-size: 11px; padding: 0 10px; border-radius: 6px; align-self: flex-start;" onclick="switchTab('${item.tab}')">
+            ${item.action} →
+          </button>
+        `;
+        prodContainer.appendChild(card);
+      });
+    }
+
+    // 3.6. Hydrate Operational Recent Activity Timeline
+    const actContainer = document.getElementById("saas-activity-container");
+    if (actContainer && window.mockData?.recentActivity) {
+      actContainer.innerHTML = "";
+      window.mockData.recentActivity.forEach(act => {
+        const item = document.createElement("div");
+        item.style.display = "flex";
+        item.style.alignItems = "center";
+        item.style.justifyContent = "space-between";
+        item.style.background = "rgba(255,255,255,0.02)";
+        item.style.border = "1px solid rgba(255,255,255,0.05)";
+        item.style.padding = "10px 12px";
+        item.style.borderRadius = "10px";
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 16px;">${act.icon}</span>
+            <div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <h5 style="font-size: 12px; font-weight: 700; color: #fff; margin: 0;">${act.title}</h5>
+                <span style="font-size: 9px; font-weight: 800; color: ${act.color || '#C8FF00'}; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">${act.badge}</span>
+              </div>
+              <p style="font-size: 11px; color: var(--text-secondary); margin: 2px 0 0 0;">${act.desc}</p>
+            </div>
+          </div>
+          <span style="font-size: 10px; color: var(--text-muted); font-family: monospace;">${act.time}</span>
+        `;
+        actContainer.appendChild(item);
+      });
+    }
+
     // 4. Hydrate Products Ranking Table
     const tableBody = document.getElementById("ranking-table-body");
     if (tableBody && window.mockData.products) {

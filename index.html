@@ -1185,6 +1185,38 @@
               <button class="btn-primary" style="width: 100%; height: 44px; background: linear-gradient(135deg, #FF6A00, #C8FF00); color: #000; font-weight: 800; border: none; border-radius: 10px; font-size: 13px;" onclick="switchTab('lives-studio')">
                 🎤 Entrar na Central de Lives & Teleprompter
               </button>
+          </div>
+
+          <!-- BLOCO 5.5: PRODUTIVIDADE (CONTINUE DE ONDE PAROU) & TIMELINE DE ATIVIDADE RECENTE OPERACIONAL -->
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px;">
+            <!-- Productivity "Continue de onde parou" -->
+            <div style="background: #0f0f13; border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 14px; margin-bottom: 18px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 18px;">⚡</span>
+                  <h4 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; margin: 0;">Continue de Onde Parou (Workspace Produtividade)</h4>
+                </div>
+                <span style="font-size: 11px; color: var(--text-muted);">Sessões ativas no OS</span>
+              </div>
+              <div id="saas-productivity-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                <!-- Productivity cards hydrated dynamically -->
+              </div>
+            </div>
+
+            <!-- Operational Recent Activity Timeline -->
+            <div style="background: #0f0f13; border: 1px solid rgba(255,255,255,0.08); padding: 24px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 14px; margin-bottom: 18px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 16px;">📜</span>
+                    <h4 style="font-family: var(--font-tech); font-size: 15px; font-weight: 700; color: #fff; margin: 0;">Atividade Recente Operacional</h4>
+                  </div>
+                  <span style="font-size: 11px; color: #C8FF00; font-weight: 800;">SSE Live Log</span>
+                </div>
+                <div id="saas-activity-container" style="display: flex; flex-direction: column; gap: 12px;">
+                  <!-- Recent Activity timeline hydrated dynamically -->
+                </div>
+              </div>
             </div>
           </div>
 

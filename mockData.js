@@ -721,6 +721,19 @@ const mockData = {
     { id: "notif-1", title: "Novo Pedido de R$ 99,90", desc: "Comissão de R$ 19,98 creditada via Base WePink Matte", time: "Há 1 min", icon: "💰" },
     { id: "notif-2", title: "Amostra Grátis Aprovada!", desc: "A marca WePink Official aprovou seu envio de amostra", time: "Há 15 min", icon: "🎁" },
     { id: "notif-3", title: "Conexão SSE TikTok Ativa", desc: "Motor de dados em tempo real sincronizado com a API", time: "Há 1h", icon: "⚡" }
+  ],
+  productivity: [
+    { id: "prod-1", type: "Roteiro IA", title: "MARTELETE 800W 8 PEÇAS", subtitle: "Gancho de Dor + 24 Blocos IA", action: "Abrir Roteiro", tab: "lives", icon: "📄", color: "#C8FF00" },
+    { id: "prod-2", type: "Avatar Studio", title: "Avatar TikTok Studio #04", subtitle: "Voz sintetizada e gestos ativos", action: "Continuar Edição", tab: "lives-studio", icon: "👤", color: "#A855F7" },
+    { id: "prod-3", type: "Live Transmissão", title: "Live Commerce #42 - WePink", subtitle: "284 pedidos · R$ 29.480,00", action: "Ver Métricas", tab: "analytics", icon: "🔴", color: "#FF6A00" },
+    { id: "prod-4", type: "Produto Radar", title: "Base WePink Matte 45ml", subtitle: "Comissão 20% · Score 9.8", action: "Ver no Radar", tab: "descobrir", icon: "🏷️", color: "#00E5FF" }
+  ],
+  recentActivity: [
+    { id: "act-1", title: "Produto Importado", desc: "Base Líquida WePink Matte 45ml adicionado à vitrine", time: "Há 4 min", icon: "📦", badge: "Vitrine", color: "#C8FF00" },
+    { id: "act-2", title: "Script IA Gerado", desc: "Gancho Psicológico 5s gerado para Martelete 800W", time: "Há 12 min", icon: "📝", badge: "Roteiro", color: "#A855F7" },
+    { id: "act-3", title: "Live Iniciada", desc: "Transmissão 'Sessão Noturna TikTok Shop' iniciada", time: "Há 45 min", icon: "🎤", badge: "Live", color: "#FF6A00" },
+    { id: "act-4", title: "Produto Vendido", desc: "Kit Ring Light Pro 10\" (Comissão R$ 25,80 creditada)", time: "Há 1h", icon: "🛒", badge: "Venda", color: "#00E5FF" },
+    { id: "act-5", title: "CTA Criado", desc: "Gatilho de Urgência 'Frete Grátis 60s' acionado", time: "Há 2h", icon: "📢", badge: "Automação", color: "#C8FF00" }
   ]
 };
 
