@@ -1452,8 +1452,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- VISÃO GERAL / SAAS DASHBOARD ENTERPRISE RENDERER ---
-  function renderDashboard() {
+  async function renderDashboard() {
     startDashboardClock();
+
+    // Fetch real backend data if API is available
+    if (window.voxApi) {
+      try {
+        const license = await window.voxApi.getLicenseStatus().catch(() => null);
+        if (license) {
+          const badgeEl = document.getElementById("saas-user-plan-badge");
+          if (badgeEl) badgeEl.textContent = `${license.plan?.name || "Vox PRO"} · ${license.credits_remaining || 50} cred.`;
+        }
+      } catch (err) {
+        console.warn("Dashboard real API fetch warning:", err.message);
+      }
+    }
 
     const mock = window.mockData || {};
     const kpisList = mock.kpis || [];
