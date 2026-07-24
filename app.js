@@ -1451,11 +1451,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderDashboard() {
     startDashboardClock();
 
+    const mock = window.mockData || {};
+    const kpisList = mock.kpis || [];
+    const actionsList = mock.quickActions || [];
+    const feedList = mock.aiFeed || [];
+    const prodList = mock.productivity || [];
+    const actList = mock.recentActivity || [];
+    const productsList = mock.products || [];
+    const goalsList = mock.goals || [];
+    const calList = mock.weeklyCalendar || [];
+    const notifList = mock.notifications || [];
+
     // 1. Hydrate 12 KPI Metric Cards Grid
     const kpisContainer = document.getElementById("saas-kpis-container");
-    if (kpisContainer && window.mockData.kpis) {
+    if (kpisContainer && kpisList.length) {
       kpisContainer.innerHTML = "";
-      window.mockData.kpis.forEach(k => {
+      kpisList.forEach(k => {
         const card = document.createElement("div");
         card.className = "saas-kpi-card";
         
@@ -1490,9 +1501,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. Hydrate Action Cards Grid
     const actionsContainer = document.getElementById("saas-actions-container");
-    if (actionsContainer && window.mockData.quickActions) {
+    if (actionsContainer && actionsList.length) {
       actionsContainer.innerHTML = "";
-      window.mockData.quickActions.forEach(a => {
+      actionsList.forEach(a => {
         const card = document.createElement("div");
         card.className = "saas-action-card";
         card.onclick = () => {
@@ -1512,9 +1523,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 3. Hydrate AI Copilot Feed List
     const feedContainer = document.getElementById("saas-ai-feed-list");
-    if (feedContainer && window.mockData.aiFeed) {
+    if (feedContainer && feedList.length) {
       feedContainer.innerHTML = "";
-      window.mockData.aiFeed.forEach(f => {
+      feedList.forEach(f => {
         const item = document.createElement("div");
         item.className = "saas-feed-item";
         item.innerHTML = `
@@ -1534,9 +1545,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 3.5. Hydrate Productivity Cards ("Continue de onde parou")
     const prodContainer = document.getElementById("saas-productivity-container");
-    if (prodContainer && window.mockData?.productivity) {
+    if (prodContainer && prodList.length) {
       prodContainer.innerHTML = "";
-      window.mockData.productivity.forEach(item => {
+      prodList.forEach(item => {
         const card = document.createElement("div");
         card.style.background = "rgba(255,255,255,0.03)";
         card.style.border = "1px solid rgba(255,255,255,0.08)";
@@ -1565,9 +1576,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 3.6. Hydrate Operational Recent Activity Timeline
     const actContainer = document.getElementById("saas-activity-container");
-    if (actContainer && window.mockData?.recentActivity) {
+    if (actContainer && actList.length) {
       actContainer.innerHTML = "";
-      window.mockData.recentActivity.forEach(act => {
+      actList.forEach(act => {
         const item = document.createElement("div");
         item.style.display = "flex";
         item.style.alignItems = "center";
@@ -1595,8 +1606,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 4. Hydrate Products Ranking Table
     const tableBody = document.getElementById("ranking-table-body");
-    if (tableBody && window.mockData.products) {
-      let rankingList = [...window.mockData.products];
+    if (tableBody && productsList.length) {
+      let rankingList = [...productsList];
       if (state.rankingPeriod === "diario") {
         rankingList.sort((a, b) => b.salesToday - a.salesToday);
         const diarioBtn = document.getElementById("rank-tab-diario");
@@ -1641,9 +1652,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 5. Hydrate Goals Progress Panel
     const goalsContainer = document.getElementById("saas-goals-container");
-    if (goalsContainer && window.mockData.goals) {
+    if (goalsContainer && goalsList.length) {
       goalsContainer.innerHTML = "";
-      window.mockData.goals.forEach(g => {
+      goalsList.forEach(g => {
         const pct = Math.min(100, (g.current / g.target) * 100).toFixed(1);
         const row = document.createElement("div");
         row.className = "saas-goal-row";
@@ -1662,9 +1673,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 6. Hydrate Weekly Calendar Panel
     const calContainer = document.getElementById("saas-calendar-container");
-    if (calContainer && window.mockData.weeklyCalendar) {
+    if (calContainer && calList.length) {
       calContainer.innerHTML = "";
-      window.mockData.weeklyCalendar.forEach(c => {
+      calList.forEach(c => {
         const item = document.createElement("div");
         item.style.cssText = "background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 12px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;";
         item.innerHTML = `
@@ -1685,9 +1696,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 7. Hydrate Notifications Drawer List
     const notifContainer = document.getElementById("notifications-list-container");
-    if (notifContainer && window.mockData.notifications) {
+    if (notifContainer && notifList.length) {
       notifContainer.innerHTML = "";
-      window.mockData.notifications.forEach(n => {
+      notifList.forEach(n => {
         const card = document.createElement("div");
         card.style.cssText = "background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 12px;";
         card.innerHTML = `
@@ -2306,7 +2317,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- AUTHENTIC REAL SALE EVENT TRIGGER (TIKTOK SHOP EVENT LISTENER) ---
   window.triggerRealTikTokSaleEvent = function(product, buyerName, buyerCity, amount) {
-    const prod = product || window.mockData.products[Math.floor(Math.random() * window.mockData.products.length)];
+    const prodsList = window.mockData?.products || [];
+    const prod = product || (prodsList.length ? prodsList[Math.floor(Math.random() * prodsList.length)] : null);
     const bName = buyerName || "Comprador TikTok Shop";
     const bCity = buyerCity || "Brasil";
     const val = amount || (prod.commissionVal * 6 + 45.0);

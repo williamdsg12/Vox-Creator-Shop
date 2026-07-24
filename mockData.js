@@ -738,8 +738,12 @@ const mockData = {
 };
 
 // Export dynamically for both Node and Browser envs
+if (typeof window !== 'undefined') {
+  window.mockData = mockData;
+}
+if (typeof globalThis !== 'undefined') {
+  globalThis.mockData = mockData;
+}
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = mockData;
-} else {
-  window.mockData = mockData;
 }
